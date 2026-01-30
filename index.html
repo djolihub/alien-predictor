@@ -6,36 +6,36 @@
     <title>Alien Predictor VIP</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root { --accent: #00e5ff; --bg: #05070a; --card: #11161f; }
+        :root { --accent: #00e5ff; --gold: #ffcc00; --bg: #05070a; --card: #11161f; }
         body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; text-align: center; }
         
-        /* Menu Principal */
         #menu { display: block; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; border: 1px solid #222; cursor: pointer; transition: 0.2s; }
-        .card:active { transform: scale(0.95); border-color: var(--accent); }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; border: 1px solid #222; cursor: pointer; }
 
-        /* Interface de Signal */
         #signal-screen { display: none; animation: fadeIn 0.4s; }
-        .header-game { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .main-box { background: var(--card); border: 2px solid var(--accent); border-radius: 25px; padding: 25px 10px; min-height: 280px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .main-box.is-gold { border-color: var(--gold); box-shadow: 0 0 25px rgba(255, 204, 0, 0.2); }
         
-        .main-box { background: var(--card); border: 2px solid var(--accent); border-radius: 25px; padding: 30px 15px; box-shadow: 0 0 25px rgba(0,229,255,0.15); }
+        .signal-type { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .type-safe { color: var(--accent); }
+        .type-gold { color: var(--gold); }
+
+        .time-interval { font-size: 15px; color: #ffcc00; margin-bottom: 15px; font-weight: bold; background: rgba(255, 204, 0, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(255, 204, 0, 0.3); }
+
+        .range-display { font-size: 45px; font-weight: 900; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .range-sep { color: #444; font-size: 24px; }
         
-        /* Stats Styles */
-        .stats-row { display: flex; justify-content: space-around; margin-bottom: 20px; font-size: 12px; font-weight: bold; color: var(--accent); }
-        .stat-item { background: rgba(0,229,255,0.05); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.2); }
+        .stats-row { display: flex; justify-content: space-around; margin-top: 20px; }
+        .stat-item { font-size: 11px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; }
 
-        .multiplier { font-size: 65px; font-weight: 900; margin: 15px 0; text-shadow: 0 0 20px var(--accent); }
-        
-        .timer-zone { font-size: 13px; color: #ffcc00; margin-top: 15px; font-weight: bold; }
+        .timer-zone { margin-top: 25px; padding-top: 15px; border-top: 1px solid #222; font-size: 12px; color: #888; }
+        #countdown { display: block; font-size: 22px; font-weight: bold; margin-top: 5px; color: white; }
 
-        /* Boutons */
-        .btn-next { width: 100%; background: var(--accent); color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 900; font-size: 16px; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
-        .btn-back { background: transparent; color: #555; border: none; font-weight: bold; cursor: pointer; }
+        .btn-next { width: 100%; background: var(--accent); color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 900; margin-top: 20px; text-transform: uppercase; }
+        .btn-next:disabled { background: #222; color: #555; }
 
-        /* Loader */
-        .loader-container { padding: 40px 0; }
-        .bar-bg { width: 100%; height: 6px; background: #222; border-radius: 10px; margin-top: 15px; }
+        .bar-bg { width: 80%; height: 6px; background: #222; border-radius: 10px; margin: 15px auto; }
         .bar-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; transition: 1.5s; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -44,7 +44,7 @@
 <body>
 
     <div id="menu">
-        <h1 style="letter-spacing: 2px;">ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
+        <h1 style="font-size: 22px;">ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
         <div class="grid">
             <div class="card" onclick="openSignal('LUCKY JET')">🚀<br>Lucky Jet</div>
             <div class="card" onclick="openSignal('AVIATOR')">✈️<br>Aviator</div>
@@ -54,82 +54,125 @@
     </div>
 
     <div id="signal-screen">
-        <div class="header-game">
-            <button class="btn-back" onclick="location.reload()">← QUITTER</button>
-            <span id="game-title" style="font-weight:bold; color:var(--accent)">GAME</span>
-            <span style="font-size:12px;" id="current-time">00:00</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <button onclick="location.reload()" style="background:none; border:none; color:#666; font-weight:bold;">← MENU</button>
+            <span id="game-title" style="color:var(--accent); font-weight:900;">GAME</span>
         </div>
 
-        <div class="main-box">
+        <div class="main-box" id="box-style">
             <div id="loading-view">
-                <p style="letter-spacing:1px;">ANALYSE DE L'ALGORITHME...</p>
+                <p style="font-size:12px; letter-spacing:1px;">ANALYSE DES FLUX...</p>
                 <div class="bar-bg"><div class="bar-fill" id="progress"></div></div>
             </div>
 
             <div id="result-view" style="display:none;">
-                <div class="stats-row">
-                    <div class="stat-item">FIABILITÉ: <span id="percent">--</span>%</div>
-                    <div class="stat-item">TYPE: SECURE</div>
+                <div id="signal-tag" class="signal-type">SIGNAL</div>
+                
+                <div class="time-interval" id="play-time">HEURE DE JEU : --:--</div>
+
+                <div class="range-display">
+                    <span id="val-min">0x</span>
+                    <span class="range-sep">—</span>
+                    <span id="val-max">0x</span>
                 </div>
 
-                <div class="multiplier" id="val">1.00x</div>
-                
+                <div class="stats-row">
+                    <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
+                    <div class="stat-item">ID: #<span id="sig-id">000</span></div>
+                </div>
+
                 <div class="timer-zone">
-                    PROCHAIN SIGNAL DANS: <span id="countdown">00:45</span>
+                    PROCHAIN CRÉNEAU DANS
+                    <span id="countdown">02:00</span>
                 </div>
             </div>
         </div>
 
-        <button class="btn-next" onclick="generateNew()">NOUVEAU SIGNAL</button>
+        <button class="btn-next" id="nextBtn" onclick="generateNew()">OBTENIR UN CRÉNEAU</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-
-        let currentName = "";
+        let timerInterval;
 
         function openSignal(name) {
-            currentName = name;
             document.getElementById('menu').style.display = 'none';
             document.getElementById('signal-screen').style.display = 'block';
             document.getElementById('game-title').innerText = name;
             generateNew();
         }
 
+        function formatTime(date) {
+            return date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0');
+        }
+
         function generateNew() {
-            // Reset affichage
+            const btn = document.getElementById('nextBtn');
+            btn.disabled = true;
             document.getElementById('loading-view').style.display = 'block';
             document.getElementById('result-view').style.display = 'none';
             document.getElementById('progress').style.width = '0%';
             
-            // Heure actuelle
-            const now = new Date();
-            document.getElementById('current-time').innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-
             setTimeout(() => { document.getElementById('progress').style.width = '100%'; }, 100);
 
             setTimeout(() => {
                 document.getElementById('loading-view').style.display = 'none';
                 document.getElementById('result-view').style.display = 'block';
                 
-                // Calculs aléatoires
-                const cote = (Math.random() * (4.2 - 1.2) + 1.2).toFixed(2);
-                document.getElementById('val').innerText = cote + "x";
-                document.getElementById('percent').innerText = Math.floor(Math.random() * (99 - 89) + 89);
+                const box = document.getElementById('box-style');
+                const tag = document.getElementById('signal-tag');
+                const minTxt = document.getElementById('val-min');
+                const maxTxt = document.getElementById('val-max');
+                const timeTxt = document.getElementById('play-time');
+
+                // LOGIQUE D'INTERVALLE ALÉATOIRE (Choix entre +2min ou +4min)
+                const now = new Date();
+                const jump = Math.random() > 0.5 ? 2 : 4; // 50% de chance d'avoir +2 ou +4
+                const startPlay = new Date(now.getTime() + jump * 60000);
+                const endPlay = new Date(now.getTime() + (jump + 1) * 60000);
+                timeTxt.innerText = "🕒 HEURE DE JEU : " + formatTime(startPlay) + " — " + formatTime(endPlay);
+
+                // LOGIQUE DE CÔTES
+                if (Math.random() > 0.8) { 
+                    let min = (Math.random() * (9 - 6) + 6).toFixed(1);
+                    let max = (Math.random() * (20 - 10) + 10).toFixed(1);
+                    tag.innerText = "⭐ SIGNAL GOLD ⭐";
+                    tag.className = "signal-type type-gold";
+                    box.classList.add('is-gold');
+                    minTxt.style.color = "var(--gold)"; maxTxt.style.color = "var(--gold)";
+                    minTxt.innerText = min + "X"; maxTxt.innerText = max + "X";
+                } else { 
+                    let min = (Math.random() * (2.5 - 2.0) + 2.0).toFixed(1);
+                    let max = (Math.random() * (5.0 - 3.0) + 3.0).toFixed(1);
+                    tag.innerText = "🛡️ SIGNAL SAFE 🛡️";
+                    tag.className = "signal-type type-safe";
+                    box.classList.remove('is-gold');
+                    minTxt.style.color = "white"; maxTxt.style.color = "white";
+                    minTxt.innerText = min + "X"; maxTxt.innerText = max + "X";
+                }
+
+                document.getElementById('perc').innerText = Math.floor(Math.random() * (99 - 96) + 96);
+                document.getElementById('sig-id').innerText = Math.floor(Math.random() * 899 + 100);
                 
-                startTimer(45); // Compte à rebours de 45 sec
+                startTimer(Math.floor(Math.random() * (180 - 120 + 1) + 120));
                 if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            }, 1600);
+            }, 1800);
         }
 
         function startTimer(duration) {
-            let timer = duration, seconds;
+            clearInterval(timerInterval);
+            let timer = duration;
             const display = document.getElementById('countdown');
-            const interval = setInterval(function () {
-                seconds = parseInt(timer % 60, 10);
-                display.textContent = "00:" + (seconds < 10 ? "0" + seconds : seconds);
-                if (--timer < 0) clearInterval(interval);
+            timerInterval = setInterval(() => {
+                let m = parseInt(timer / 60, 10);
+                let s = parseInt(timer % 60, 10);
+                display.textContent = (m<10?"0"+m:m) + ":" + (s<10?"0"+s:s);
+                if (--timer < 0) {
+                    clearInterval(timerInterval);
+                    display.textContent = "PRÊT";
+                    document.getElementById('nextBtn').disabled = false;
+                }
             }, 1000);
         }
     </script>
