@@ -3,170 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alien Predictor VIP</title>
+    <title>Alien VIP</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --neon-blue: #00d2ff;
-            --neon-purple: #9d50bb;
-            --dark-bg: #05070a;
-            --card-bg: #10141d;
-        }
-
-        body {
-            background-color: var(--dark-bg);
-            color: white;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .header {
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #00d2ff, #9d50bb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 900;
-            margin: 10px 0;
-        }
-
-        /* Grille des jeux */
-        .game-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .game-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .game-card:active {
-            transform: scale(0.92);
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        .game-icon {
-            font-size: 35px;
-            margin-bottom: 12px;
-        }
-
-        .game-name {
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        /* Bouton 1Win */
-        .footer-link {
-            display: block;
-            background: linear-gradient(45deg, #ff0055, #ff5000);
-            color: white;
-            text-decoration: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-weight: bold;
-            margin-top: 10px;
-            font-size: 16px;
-            box-shadow: 0 5px 20px rgba(255, 0, 85, 0.4);
-            text-transform: uppercase;
-        }
-
-        .status-bar {
-            font-size: 10px;
-            color: #444;
-            margin-top: 25px;
-            letter-spacing: 2px;
-        }
+        body { background: #05070a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .card { background: #10141d; padding: 20px; border-radius: 15px; border: 1px solid #333; cursor: pointer; }
+        #signal-screen { display: none; padding: 40px 20px; }
+        .box { border: 2px solid #00d2ff; padding: 30px; border-radius: 20px; background: #0a0e14; }
+        .val { font-size: 50px; font-weight: bold; color: #00d2ff; }
+        .btn-back { background: #222; color: #888; border: none; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        .loader { height: 4px; background: #00d2ff; width: 0%; transition: 1.5s; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div style="font-size: 40px;">👽</div>
-        <h1>ALIEN PREDICTOR</h1>
-        <p style="font-size: 11px; color: var(--neon-blue); font-weight: bold; text-transform: uppercase;">Cloud Injection S397</p>
-    </div>
-
-    <div class="game-grid">
-        <div class="game-card" onclick="openGame('LUCKY JET')">
-            <span class="game-icon">🚀</span>
-            <div class="game-name">Lucky Jet</div>
-        </div>
-
-        <div class="game-card" onclick="openGame('AVIATOR')">
-            <span class="game-icon">✈️</span>
-            <div class="game-name">Aviator</div>
-        </div>
-
-        <div class="game-card" onclick="openGame('ROCKET QUEEN')">
-            <span class="game-icon">👑</span>
-            <div class="game-name">Rocket Queen</div>
-        </div>
-
-        <div class="game-card" onclick="openGame('AVIATRIX')">
-            <span class="game-icon">🛸</span>
-            <div class="game-name">Aviatrix</div>
-        </div>
-        
-        <div class="game-card" style="grid-column: span 2;" onclick="openGame('1WIN CRASH')">
-            <span class="game-icon">📉</span>
-            <div class="game-name">1Win Crash AI</div>
+    <div id="menu">
+        <h1 style="color:#00d2ff">ALIEN PREDICTOR</h1>
+        <div class="grid">
+            <div class="card" onclick="start('LUCKY JET', '🚀')">🚀<br>Lucky Jet</div>
+            <div class="card" onclick="start('AVIATOR', '✈️')">✈️<br>Aviator</div>
+            <div class="card" onclick="start('ROCKET QUEEN', '👑')">👑<br>Rocket Queen</div>
+            <div class="card" onclick="start('AVIATRIX', '🛸')">🛸<br>Aviatrix</div>
         </div>
     </div>
 
-    <a href="https://1wlvkt.life/casino/list?open=register&p=s41y" class="footer-link">
-        🚀 INSCRIPTION / DÉPÔT 1WIN
-    </a>
-
-    <div class="status-bar">SYSTEM STATUS: OPERATIONAL</div>
+    <div id="signal-screen">
+        <button class="btn-back" onclick="location.reload()">← RETOUR</button>
+        <h2 id="title"></h2>
+        <div class="box">
+            <div id="loading">
+                <p>SCAN EN COURS...</p>
+                <div class="loader" id="bar"></div>
+            </div>
+            <div id="result" style="display:none">
+                <p>SIGNAL TROUVÉ</p>
+                <div class="val" id="num">1.50x</div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.ready();
 
-        function openGame(name) {
-            // Un petit retour tactile pour l'utilisateur
-            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+        function start(name, icon) {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('signal-screen').style.display = 'block';
+            document.getElementById('title').innerText = name;
             
-            // Pour l'instant on affiche une alerte, on remplacera par tes pages de signaux
-            alert("Accès au serveur " + name + "...");
+            setTimeout(() => { document.getElementById('bar').style.width = '100%'; }, 100);
+
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('num').innerText = (Math.random() * (3.5 - 1.2) + 1.2).toFixed(2) + 'x';
+                if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            }, 1600);
         }
     </script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alien Predictor VIP</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root { --neon-blue: #00d2ff; --neon-purple: #9d50bb; --dark-bg: #05070a; --card-bg: #10141d; }
-        body { background-color: var(--dark-bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; overflow-x: hidden; }
-        
-        /* Menu Principal */
-        #menu-screen { display: block; }
-        .header h1 { font-size: 24px; background: linear-gradient(to right, #00d2ff, #9d50bb); -webkit-background-c…
