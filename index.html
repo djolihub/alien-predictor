@@ -11,10 +11,11 @@
         
         #menu { display: block; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; border: 1px solid #222; cursor: pointer; }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; border: 1px solid #222; cursor: pointer; transition: 0.2s; }
+        .card:active { transform: scale(0.95); border-color: var(--accent); }
 
         #signal-screen { display: none; animation: fadeIn 0.4s; }
-        .main-box { background: var(--card); border: 2px solid var(--accent); border-radius: 25px; padding: 25px 10px; min-height: 280px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .main-box { background: var(--card); border: 2px solid var(--accent); border-radius: 25px; padding: 25px 10px; min-height: 300px; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .main-box.is-gold { border-color: var(--gold); box-shadow: 0 0 25px rgba(255, 204, 0, 0.2); }
         
         .signal-type { font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
@@ -23,11 +24,10 @@
 
         .time-interval { font-size: 15px; color: #ffcc00; margin-bottom: 15px; font-weight: bold; background: rgba(255, 204, 0, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(255, 204, 0, 0.3); }
 
-        /* Correction de l'affichage des côtes */
         .range-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
         .range-display { font-size: 45px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .range-sep { color: #444; font-size: 24px; }
-        .range-labels { display: flex; justify-content: space-between; width: 180px; font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .range-labels { display: flex; justify-content: space-between; width: 180px; font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
         
         .stats-row { display: flex; justify-content: space-around; margin-top: 20px; }
         .stat-item { font-size: 11px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; }
@@ -35,8 +35,8 @@
         .timer-zone { margin-top: 25px; padding-top: 15px; border-top: 1px solid #222; font-size: 12px; color: #888; }
         #countdown { display: block; font-size: 22px; font-weight: bold; margin-top: 5px; color: white; }
 
-        .btn-next { width: 100%; background: var(--accent); color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 900; margin-top: 20px; text-transform: uppercase; }
-        .btn-next:disabled { background: #222; color: #555; }
+        .btn-next { width: 100%; background: var(--accent); color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 900; margin-top: 20px; text-transform: uppercase; cursor: pointer; }
+        .btn-next:disabled { background: #222; color: #555; cursor: not-allowed; }
 
         .bar-bg { width: 80%; height: 6px; background: #222; border-radius: 10px; margin: 15px auto; }
         .bar-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; transition: 1.5s; }
@@ -47,7 +47,7 @@
 <body>
 
     <div id="menu">
-        <h1 style="font-size: 22px;">ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
+        <h1 style="font-size: 22px; letter-spacing: 2px;">ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
         <div class="grid">
             <div class="card" onclick="openSignal('LUCKY JET')">🚀<br>Lucky Jet</div>
             <div class="card" onclick="openSignal('AVIATOR')">✈️<br>Aviator</div>
@@ -58,13 +58,13 @@
 
     <div id="signal-screen">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <button onclick="goBack()" style="background:none; border:none; color:#666; font-weight:bold;">← MENU</button>
+            <button onclick="goBack()" style="background:none; border:none; color:#666; font-weight:bold; cursor:pointer;">← MENU</button>
             <span id="game-title" style="color:var(--accent); font-weight:900;">GAME</span>
         </div>
 
         <div class="main-box" id="box-style">
             <div id="loading-view">
-                <p style="font-size:12px; letter-spacing:1px;">CALCUL DES PROBABILITÉS...</p>
+                <p style="font-size:12px; letter-spacing:1px;">ANALYSE DES FLUX...</p>
                 <div class="bar-bg"><div class="bar-fill" id="progress"></div></div>
             </div>
 
@@ -86,6 +86,7 @@
                     <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
                     <div class="stat-item">ID: #<span id="sig-id">000</span></div>
                 </div>
+
                 <div class="timer-zone">
                     PROCHAIN SIGNAL DANS
                     <span id="countdown">00:00</span>
@@ -129,32 +130,36 @@
 
             setTimeout(() => {
                 const now = new Date();
-                const jump = Math.random() > 0.5 ? 2 : 4;
+                
+                // --- RÉGLAGE : DÉLAI DE 2 OU 3 MINUTES ---
+                const jump = Math.random() > 0.5 ? 2 : 3; 
                 const startT = new Date(now.getTime() + jump * 60000);
                 const endT = new Date(now.getTime() + (jump + 1) * 60000);
+                
+                // Cooldown avant nouveau signal (2 à 3 minutes)
                 const waitTime = Math.floor(Math.random() * (180 - 120 + 1) + 120);
                 
                 const isGold = Math.random() > 0.8;
                 let precision, c1, c2;
 
                 if (isGold) {
-                    c1 = (Math.random() * (9-6)+6).toFixed(1);
-                    c2 = (Math.random() * (20-10)+10).toFixed(1);
+                    c1 = (Math.random() * (9-6)+6);
+                    c2 = (Math.random() * (20-10)+10);
                     precision = Math.floor(Math.random() * (88 - 76 + 1) + 76);
                 } else {
-                    c1 = (Math.random() * (2.5-2.0)+2.0).toFixed(1);
-                    c2 = (Math.random() * (5.0-3.0)+3.0).toFixed(1);
+                    c1 = (Math.random() * (2.5-2.0)+2.0);
+                    c2 = (Math.random() * (5.0-3.0)+3.0);
                     precision = Math.floor(Math.random() * (98 - 80 + 1) + 80);
                 }
 
-                // SÉCURITÉ : On s'assure que min est toujours plus petit que max
-                const finalMin = Math.min(c1, c2);
-                const finalMax = Math.max(c1, c2);
+                // SÉCURITÉ : Min d'abord, Max ensuite
+                const finalMin = Math.min(c1, c2).toFixed(1);
+                const finalMax = Math.max(c1, c2).toFixed(1);
 
                 const signalData = {
                     isGold: isGold,
-                    min: finalMin.toFixed(1),
-                    max: finalMax.toFixed(1),
+                    min: finalMin,
+                    max: finalMax,
                     timeStr: formatTime(startT) + " — " + formatTime(endT),
                     perc: precision,
                     id: Math.floor(Math.random() * 899+100),
@@ -210,7 +215,7 @@
 
                 if (diff <= 0) {
                     clearInterval(timerInterval);
-                    display.textContent = "PRÊT";
+                    display.textContent = "SIGNAL PRÊT !";
                     btn.disabled = false;
                 } else {
                     let m = parseInt(diff / 60, 10);
