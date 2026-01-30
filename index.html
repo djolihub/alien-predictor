@@ -23,8 +23,11 @@
 
         .time-interval { font-size: 15px; color: #ffcc00; margin-bottom: 15px; font-weight: bold; background: rgba(255, 204, 0, 0.1); padding: 8px; border-radius: 12px; border: 1px solid rgba(255, 204, 0, 0.3); }
 
-        .range-display { font-size: 45px; font-weight: 900; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* Correction de l'affichage des côtes */
+        .range-container { display: flex; flex-direction: column; align-items: center; margin: 10px 0; }
+        .range-display { font-size: 45px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .range-sep { color: #444; font-size: 24px; }
+        .range-labels { display: flex; justify-content: space-between; width: 180px; font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
         
         .stats-row { display: flex; justify-content: space-around; margin-top: 20px; }
         .stat-item { font-size: 11px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 8px; }
@@ -61,16 +64,24 @@
 
         <div class="main-box" id="box-style">
             <div id="loading-view">
-                <p style="font-size:12px; letter-spacing:1px;">CALCUL DE PROBABILITÉ...</p>
+                <p style="font-size:12px; letter-spacing:1px;">CALCUL DES PROBABILITÉS...</p>
                 <div class="bar-bg"><div class="bar-fill" id="progress"></div></div>
             </div>
 
             <div id="result-view" style="display:none;">
                 <div id="signal-tag" class="signal-type">SIGNAL</div>
                 <div class="time-interval" id="play-time">HEURE DE JEU : --:--</div>
-                <div class="range-display">
-                    <span id="val-min">0x</span><span class="range-sep">—</span><span id="val-max">0x</span>
+                
+                <div class="range-container">
+                    <div class="range-display">
+                        <span id="val-min">0x</span><span class="range-sep">—</span><span id="val-max">0x</span>
+                    </div>
+                    <div class="range-labels">
+                        <span>Minima</span>
+                        <span>Objectif</span>
+                    </div>
                 </div>
+
                 <div class="stats-row">
                     <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
                     <div class="stat-item">ID: #<span id="sig-id">000</span></div>
@@ -124,24 +135,26 @@
                 const waitTime = Math.floor(Math.random() * (180 - 120 + 1) + 120);
                 
                 const isGold = Math.random() > 0.8;
-                let precision, minC, maxC;
+                let precision, c1, c2;
 
                 if (isGold) {
-                    // CÔTE GOLD : 6x à 20x | PRÉCISION : 76% à 88%
-                    minC = (Math.random() * (9-6)+6).toFixed(1);
-                    maxC = (Math.random() * (20-10)+10).toFixed(1);
+                    c1 = (Math.random() * (9-6)+6).toFixed(1);
+                    c2 = (Math.random() * (20-10)+10).toFixed(1);
                     precision = Math.floor(Math.random() * (88 - 76 + 1) + 76);
                 } else {
-                    // CÔTE SAFE : 2x à 5x | PRÉCISION : 80% à 98%
-                    minC = (Math.random() * (2.5-2.0)+2.0).toFixed(1);
-                    maxC = (Math.random() * (5.0-3.0)+3.0).toFixed(1);
+                    c1 = (Math.random() * (2.5-2.0)+2.0).toFixed(1);
+                    c2 = (Math.random() * (5.0-3.0)+3.0).toFixed(1);
                     precision = Math.floor(Math.random() * (98 - 80 + 1) + 80);
                 }
 
+                // SÉCURITÉ : On s'assure que min est toujours plus petit que max
+                const finalMin = Math.min(c1, c2);
+                const finalMax = Math.max(c1, c2);
+
                 const signalData = {
                     isGold: isGold,
-                    min: minC,
-                    max: maxC,
+                    min: finalMin.toFixed(1),
+                    max: finalMax.toFixed(1),
                     timeStr: formatTime(startT) + " — " + formatTime(endT),
                     perc: precision,
                     id: Math.floor(Math.random() * 899+100),
