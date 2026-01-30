@@ -6,142 +6,153 @@
     <title>Alien Predictor VIP</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --neon-blue: #00d2ff;
+            --neon-purple: #9d50bb;
+            --dark-bg: #05070a;
+            --card-bg: #10141d;
+        }
+
         body {
-            background: #0b0f1a;
+            background-color: var(--dark-bg);
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            overflow-x: hidden;
+            text-align: center;
         }
-        h1 {
-            color: #00e5ff;
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
             font-size: 24px;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-            margin-bottom: 30px;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #00d2ff, #9d50bb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            margin: 10px 0;
         }
-        .grid {
+
+        /* Grille des jeux */
+        .game-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-        button {
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            padding: 15px 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        button:active {
-            transform: scale(0.95);
-            background: #00e5ff;
-            color: #000;
-        }
-        .signal-box {
-            background: rgba(0, 229, 255, 0.05);
-            border: 1px solid #00e5ff;
+
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 20px;
-            min-height: 150px;
-            margin-top: 20px;
+            padding: 25px 10px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #00e5ff;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 10px;
+
+        .game-card:active {
+            transform: scale(0.92);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .btn-register {
-            display: inline-block;
-            margin-top: 20px;
-            background: #ff0055;
+
+        .game-icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .game-name {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        /* Bouton 1Win */
+        .footer-link {
+            display: block;
+            background: linear-gradient(45deg, #ff0055, #ff5000);
             color: white;
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 50px;
+            padding: 18px;
+            border-radius: 15px;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+            margin-top: 10px;
+            font-size: 16px;
+            box-shadow: 0 5px 20px rgba(255, 0, 85, 0.4);
+            text-transform: uppercase;
         }
-        .footer-note {
+
+        .status-bar {
             font-size: 10px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 30px;
+            color: #444;
+            margin-top: 25px;
+            letter-spacing: 2px;
         }
     </style>
 </head>
 <body>
 
-    <h1>👽 ALIEN PREDICTOR VIP</h1>
-
-    <div class="grid">
-        <button onclick="generateSignal('🚀 LUCKY JET')">LUCKY JET</button>
-        <button onclick="generateSignal('👑 ROCKET QUEEN')">ROCKET QUEEN</button>
-        <button onclick="generateSignal('💎 MINES')">MINES</button>
-        <button onclick="generateSignal('⚽ PENALTY')">PENALTY</button>
+    <div class="header">
+        <div style="font-size: 40px;">👽</div>
+        <h1>ALIEN PREDICTOR</h1>
+        <p style="font-size: 11px; color: var(--neon-blue); font-weight: bold; text-transform: uppercase;">Cloud Injection S397</p>
     </div>
 
-    <div class="signal-box" id="signalBox">
-        <p>Sélectionnez un jeu pour hacker le signal...</p>
+    <div class="game-grid">
+        <div class="game-card" onclick="openGame('LUCKY JET')">
+            <span class="game-icon">🚀</span>
+            <div class="game-name">Lucky Jet</div>
+        </div>
+
+        <div class="game-card" onclick="openGame('AVIATOR')">
+            <span class="game-icon">✈️</span>
+            <div class="game-name">Aviator</div>
+        </div>
+
+        <div class="game-card" onclick="openGame('ROCKET QUEEN')">
+            <span class="game-icon">👑</span>
+            <div class="game-name">Rocket Queen</div>
+        </div>
+
+        <div class="game-card" onclick="openGame('AVIATRIX')">
+            <span class="game-icon">🛸</span>
+            <div class="game-name">Aviatrix</div>
+        </div>
+        
+        <div class="game-card" style="grid-column: span 2;" onclick="openGame('1WIN CRASH')">
+            <span class="game-icon">📉</span>
+            <div class="game-name">1Win Crash AI</div>
+        </div>
     </div>
 
-    <a href="https://1wlvkt.life/casino/list?open=register&p=s41y" class="btn-register" target="_blank">
-        🔗 S'INSCRIRE SUR 1WIN
+    <a href="https://1wlvkt.life/casino/list?open=register&p=s41y" class="footer-link">
+        🚀 INSCRIPTION / DÉPÔT 1WIN
     </a>
 
-    <p class="footer-note">Système de prédiction basé sur l'IA Alien S397. Utilisez de manière responsable.</p>
+    <div class="status-bar">SYSTEM STATUS: OPERATIONAL</div>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Ouvre en grand sur Telegram
+        tg.expand();
+        tg.ready();
 
-        function generateSignal(game) {
-            const box = document.getElementById('signalBox');
+        function openGame(name) {
+            // Un petit retour tactile pour l'utilisateur
+            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
             
-            // Phase de chargement
-            box.innerHTML = `
-                <div class="loader"></div>
-                <p>Analyse de l'algorithme ${game}...</p>
-            `;
-
-            setTimeout(() => {
-                // Calcul des côtes
-                const coteMin = (Math.random() * (3.5 - 1.5) + 1.5).toFixed(2);
-                const coteMax = (parseFloat(coteMin) + Math.random() * 8).toFixed(2);
-                const assurance = (coteMin * 0.85).toFixed(2);
-
-                // Temps de validité
-                const now = new Date();
-                const end = new Date(now.getTime() + 2 * 60000);
-                const formatTime = (d) => d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
-
-                box.innerHTML = `
-                    <div style="text-align: center;">
-                        <b style="color:#00e5ff; font-size: 18px;">✅ SIGNAL DÉTECTÉ</b><br>
-                        <span style="font-size: 20px; display:block; margin: 10px 0;">${coteMin}x — ${coteMax}x</span>
-                        <small>🛡️ Retrait conseillé : <b>${assurance}x</b></small><br>
-                        <small>⏰ Valide jusqu'à : <b>${formatTime(end)}</b></small>
-                    </div>
-                `;
-                
-                // Petit vibreur sur le téléphone si supporté
-                if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-            }, 1500);
+            // Pour l'instant on affiche une alerte, on remplacera par tes pages de signaux
+            alert("Accès au serveur " + name + "...");
         }
     </script>
 </body>
-</html>
+</html
