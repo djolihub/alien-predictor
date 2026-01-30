@@ -3,63 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alien VIP</title>
+    <title>Alien Predictor VIP</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #05070a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .card { background: #10141d; padding: 20px; border-radius: 15px; border: 1px solid #333; cursor: pointer; }
-        #signal-screen { display: none; padding: 40px 20px; }
-        .box { border: 2px solid #00d2ff; padding: 30px; border-radius: 20px; background: #0a0e14; }
-        .val { font-size: 50px; font-weight: bold; color: #00d2ff; }
-        .btn-back { background: #222; color: #888; border: none; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
-        .loader { height: 4px; background: #00d2ff; width: 0%; transition: 1.5s; margin: 20px 0; }
+        :root { --accent: #00e5ff; --bg: #05070a; --card: #11161f; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; text-align: center; }
+        
+        /* Menu Principal */
+        #menu { display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        .card { background: var(--card); padding: 25px 10px; border-radius: 15px; border: 1px solid #222; cursor: pointer; transition: 0.2s; }
+        .card:active { transform: scale(0.95); border-color: var(--accent); }
+
+        /* Interface de Signal */
+        #signal-screen { display: none; animation: fadeIn 0.4s; }
+        .header-game { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .main-box { background: var(--card); border: 2px solid var(--accent); border-radius: 25px; padding: 30px 15px; box-shadow: 0 0 25px rgba(0,229,255,0.15); }
+        
+        /* Stats Styles */
+        .stats-row { display: flex; justify-content: space-around; margin-bottom: 20px; font-size: 12px; font-weight: bold; color: var(--accent); }
+        .stat-item { background: rgba(0,229,255,0.05); padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.2); }
+
+        .multiplier { font-size: 65px; font-weight: 900; margin: 15px 0; text-shadow: 0 0 20px var(--accent); }
+        
+        .timer-zone { font-size: 13px; color: #ffcc00; margin-top: 15px; font-weight: bold; }
+
+        /* Boutons */
+        .btn-next { width: 100%; background: var(--accent); color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 900; font-size: 16px; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
+        .btn-back { background: transparent; color: #555; border: none; font-weight: bold; cursor: pointer; }
+
+        /* Loader */
+        .loader-container { padding: 40px 0; }
+        .bar-bg { width: 100%; height: 6px; background: #222; border-radius: 10px; margin-top: 15px; }
+        .bar-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; transition: 1.5s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="menu">
-        <h1 style="color:#00d2ff">ALIEN PREDICTOR</h1>
+        <h1 style="letter-spacing: 2px;">ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
         <div class="grid">
-            <div class="card" onclick="start('LUCKY JET', '🚀')">🚀<br>Lucky Jet</div>
-            <div class="card" onclick="start('AVIATOR', '✈️')">✈️<br>Aviator</div>
-            <div class="card" onclick="start('ROCKET QUEEN', '👑')">👑<br>Rocket Queen</div>
-            <div class="card" onclick="start('AVIATRIX', '🛸')">🛸<br>Aviatrix</div>
+            <div class="card" onclick="openSignal('LUCKY JET')">🚀<br>Lucky Jet</div>
+            <div class="card" onclick="openSignal('AVIATOR')">✈️<br>Aviator</div>
+            <div class="card" onclick="openSignal('ROCKET QUEEN')">👑<br>Rocket Queen</div>
+            <div class="card" onclick="openSignal('AVIATRIX')">🛸<br>Aviatrix</div>
         </div>
     </div>
 
     <div id="signal-screen">
-        <button class="btn-back" onclick="location.reload()">← RETOUR</button>
-        <h2 id="title"></h2>
-        <div class="box">
-            <div id="loading">
-                <p>SCAN EN COURS...</p>
-                <div class="loader" id="bar"></div>
+        <div class="header-game">
+            <button class="btn-back" onclick="location.reload()">← QUITTER</button>
+            <span id="game-title" style="font-weight:bold; color:var(--accent)">GAME</span>
+            <span style="font-size:12px;" id="current-time">00:00</span>
+        </div>
+
+        <div class="main-box">
+            <div id="loading-view">
+                <p style="letter-spacing:1px;">ANALYSE DE L'ALGORITHME...</p>
+                <div class="bar-bg"><div class="bar-fill" id="progress"></div></div>
             </div>
-            <div id="result" style="display:none">
-                <p>SIGNAL TROUVÉ</p>
-                <div class="val" id="num">1.50x</div>
+
+            <div id="result-view" style="display:none;">
+                <div class="stats-row">
+                    <div class="stat-item">FIABILITÉ: <span id="percent">--</span>%</div>
+                    <div class="stat-item">TYPE: SECURE</div>
+                </div>
+
+                <div class="multiplier" id="val">1.00x</div>
+                
+                <div class="timer-zone">
+                    PROCHAIN SIGNAL DANS: <span id="countdown">00:45</span>
+                </div>
             </div>
         </div>
+
+        <button class="btn-next" onclick="generateNew()">NOUVEAU SIGNAL</button>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function start(name, icon) {
+        let currentName = "";
+
+        function openSignal(name) {
+            currentName = name;
             document.getElementById('menu').style.display = 'none';
             document.getElementById('signal-screen').style.display = 'block';
-            document.getElementById('title').innerText = name;
+            document.getElementById('game-title').innerText = name;
+            generateNew();
+        }
+
+        function generateNew() {
+            // Reset affichage
+            document.getElementById('loading-view').style.display = 'block';
+            document.getElementById('result-view').style.display = 'none';
+            document.getElementById('progress').style.width = '0%';
             
-            setTimeout(() => { document.getElementById('bar').style.width = '100%'; }, 100);
+            // Heure actuelle
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+
+            setTimeout(() => { document.getElementById('progress').style.width = '100%'; }, 100);
 
             setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('num').innerText = (Math.random() * (3.5 - 1.2) + 1.2).toFixed(2) + 'x';
+                document.getElementById('loading-view').style.display = 'none';
+                document.getElementById('result-view').style.display = 'block';
+                
+                // Calculs aléatoires
+                const cote = (Math.random() * (4.2 - 1.2) + 1.2).toFixed(2);
+                document.getElementById('val').innerText = cote + "x";
+                document.getElementById('percent').innerText = Math.floor(Math.random() * (99 - 89) + 89);
+                
+                startTimer(45); // Compte à rebours de 45 sec
                 if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             }, 1600);
+        }
+
+        function startTimer(duration) {
+            let timer = duration, seconds;
+            const display = document.getElementById('countdown');
+            const interval = setInterval(function () {
+                seconds = parseInt(timer % 60, 10);
+                display.textContent = "00:" + (seconds < 10 ? "0" + seconds : seconds);
+                if (--timer < 0) clearInterval(interval);
+            }, 1000);
         }
     </script>
 </body>
