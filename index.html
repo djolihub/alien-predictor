@@ -61,7 +61,7 @@
 
         <div class="main-box" id="box-style">
             <div id="loading-view">
-                <p style="font-size:12px; letter-spacing:1px;">SYNCHRONISATION...</p>
+                <p style="font-size:12px; letter-spacing:1px;">CALCUL DE PROBABILITÉ...</p>
                 <div class="bar-bg"><div class="bar-fill" id="progress"></div></div>
             </div>
 
@@ -96,7 +96,6 @@
             document.getElementById('signal-screen').style.display = 'block';
             document.getElementById('game-title').innerText = name;
             
-            // Vérifier s'il y a un signal en mémoire pour ce jeu
             const saved = localStorage.getItem('signal_' + name);
             if (saved) {
                 const data = JSON.parse(saved);
@@ -124,12 +123,27 @@
                 const endT = new Date(now.getTime() + (jump + 1) * 60000);
                 const waitTime = Math.floor(Math.random() * (180 - 120 + 1) + 120);
                 
+                const isGold = Math.random() > 0.8;
+                let precision, minC, maxC;
+
+                if (isGold) {
+                    // CÔTE GOLD : 6x à 20x | PRÉCISION : 76% à 88%
+                    minC = (Math.random() * (9-6)+6).toFixed(1);
+                    maxC = (Math.random() * (20-10)+10).toFixed(1);
+                    precision = Math.floor(Math.random() * (88 - 76 + 1) + 76);
+                } else {
+                    // CÔTE SAFE : 2x à 5x | PRÉCISION : 80% à 98%
+                    minC = (Math.random() * (2.5-2.0)+2.0).toFixed(1);
+                    maxC = (Math.random() * (5.0-3.0)+3.0).toFixed(1);
+                    precision = Math.floor(Math.random() * (98 - 80 + 1) + 80);
+                }
+
                 const signalData = {
-                    isGold: Math.random() > 0.8,
-                    min: (Math.random() > 0.8 ? (Math.random() * (9-6)+6) : (Math.random() * (2.5-2.0)+2.0)).toFixed(1),
-                    max: (Math.random() > 0.8 ? (Math.random() * (20-10)+10) : (Math.random() * (5.0-3.0)+3.0)).toFixed(1),
+                    isGold: isGold,
+                    min: minC,
+                    max: maxC,
                     timeStr: formatTime(startT) + " — " + formatTime(endT),
-                    perc: Math.floor(Math.random() * (99-96)+96),
+                    perc: precision,
                     id: Math.floor(Math.random() * 899+100),
                     expiry: new Date().getTime() + (waitTime * 1000)
                 };
@@ -178,6 +192,7 @@
             function update() {
                 const now = new Date().getTime();
                 const saved = JSON.parse(localStorage.getItem('signal_' + currentGame));
+                if(!saved) return;
                 const diff = Math.round((saved.expiry - now) / 1000);
 
                 if (diff <= 0) {
