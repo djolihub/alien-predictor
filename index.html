@@ -5,190 +5,234 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Alien Predictor VIP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
 <style>
-:root{
- --accent:#ff2b2b;
- --gold:#ffcc00;
- --bg:#0b0b0f;
- --card:#11161f;
+:root { --bg:#05070a; --card:#11161f; }
+
+body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; margin:0; padding:15px; text-align:center; }
+
+#menu { display:block; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+.card { background: var(--card); padding:20px 10px; border-radius:15px; border:1px solid #222; cursor:pointer; transition:0.2s; display:flex; flex-direction:column; align-items:center;}
+.card:active { transform:scale(0.95); }
+
+.game-img { width:90px; height:90px; object-fit:contain; margin-bottom:10px; }
+
+#signal-screen { display:none; animation:fadeIn 0.4s; }
+
+.main-box {
+    background:var(--card);
+    border:3px solid #fff;
+    border-radius:30px;
+    padding:25px 15px;
+    min-height:350px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 0 15px rgba(255,255,255,0.1);
+    transition:0.3s;
 }
+.main-box.gold { box-shadow:0 0 25px rgba(255,204,0,0.6); border-color:gold; }
 
-body{
- background:var(--bg);
- color:white;
- font-family:'Segoe UI',sans-serif;
- margin:0;
- padding:15px;
- text-align:center;
-}
+.signal-type { font-size:16px; font-weight:900; margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; }
+.type-safe { color:white; }
+.type-gold { color:gold; }
 
-.grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:12px;
- margin-top:20px;
-}
+.time-interval { font-size:16px; color:white; margin-bottom:15px; font-weight:bold; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); }
 
-.card{
- background:var(--card);
- padding:20px 10px;
- border-radius:15px;
- border:1px solid #222;
- cursor:pointer;
- display:flex;
- flex-direction:column;
- align-items:center;
-}
+.range-container { display:flex; flex-direction:column; align-items:center; margin:15px 0; }
+.range-display { font-size:50px; font-weight:900; display:flex; align-items:center; justify-content:center; gap:15px; }
+.range-sep { color:#444; font-size:28px; }
+.range-labels { display:flex; justify-content:space-between; width:200px; font-size:10px; color:#aaa; text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
 
-.game-img{
- width:90px;
- height:90px;
- object-fit:contain;
- margin-bottom:10px;
-}
+.stats-row { display:flex; justify-content:space-around; margin-top:20px; width:100%; }
+.stat-item { font-size:12px; background:rgba(255,255,255,0.05); padding:8px 15px; border-radius:12px; }
 
-/* PAGE SIGNAL */
+.timer-zone { margin-top:25px; padding-top:15px; border-top:1px solid #222; font-size:12px; color:#888; }
+#countdown { display:block; font-size:24px; font-weight:bold; margin-top:5px; color:white; }
 
-#signal-screen{display:none;}
+.btn-next { width:90%; color:black; border:none; padding:18px; border-radius:25px; font-weight:900; margin-top:20px; cursor:pointer; text-transform:uppercase; font-size:16px; transition:0.3s; }
+.btn-next:disabled { background:#222; color:#555; cursor:not-allowed; }
 
-.game-title{
- font-size:22px;
- font-weight:900;
- margin:15px 0 20px;
-}
+.bar-bg { width:80%; height:6px; background:#222; border-radius:10px; margin:15px auto; }
+.bar-fill { height:100%; width:0%; border-radius:10px; transition:1.5s; }
 
-.signal-card{
- background:linear-gradient(180deg,#ff2b2b,#c40000);
- border-radius:25px;
- padding:25px;
- box-shadow:0 10px 40px rgba(255,0,0,0.3);
- margin-bottom:20px;
-}
-
-.signal-number{
- font-size:40px;
- font-weight:900;
- margin:20px 0;
-}
-
-.info-card{
- background:#0c0c0f;
- border-radius:20px;
- padding:20px;
- margin-top:10px;
-}
-
-.next-timer{
- background:linear-gradient(90deg,#7b2cff,#ff2b2b);
- padding:18px;
- border-radius:18px;
- margin-top:15px;
- font-weight:700;
-}
-
-.btn-next{
- width:100%;
- background:var(--accent);
- color:white;
- border:none;
- padding:18px;
- border-radius:15px;
- font-weight:900;
- margin-top:20px;
- cursor:pointer;
-}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 </style>
 </head>
-
 <body>
 
-<!-- MENU -->
 <div id="menu">
-<h1>ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
+<h1>ALIEN <span style="color:#00e5ff">PREDICTOR</span></h1>
 
 <div class="grid">
-<div class="card" onclick="openSignal('Lucky Jet')">
-<img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img">
-<span>Lucky Jet</span>
-</div>
-
-<div class="card" onclick="openSignal('Aviator')">
-<img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img">
-<span>Aviator</span>
-</div>
-
-<div class="card" onclick="openSignal('Rocket Queen')">
-<img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img">
-<span>Rocket Queen</span>
-</div>
-
-<div class="card" onclick="openSignal('Aviatrix')">
-<img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img">
-<span>Aviatrix</span>
-</div>
+    <div class="card" onclick="openSignal('LUCKY JET')">
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img">
+        <span>Lucky Jet</span>
+    </div>
+    <div class="card" onclick="openSignal('AVIATOR')">
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img">
+        <span>Aviator</span>
+    </div>
+    <div class="card" onclick="openSignal('ROCKET QUEEN')">
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img">
+        <span>Rocket Queen</span>
+    </div>
+    <div class="card" onclick="openSignal('AVIATRIX')">
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img">
+        <span>Aviatrix</span>
+    </div>
 </div>
 </div>
 
-<!-- PAGE SIGNAL -->
 <div id="signal-screen">
-
-<button onclick="goBack()">← MENU</button>
-
-<div class="game-title" id="game-name">AVIATOR AI PREDICTOR</div>
-
-<div class="signal-card">
-<div class="signal-number" id="big-signal">--</div>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; width:100%;">
+<button onclick="goBack()" style="background:none;border:none;color:#666;font-weight:bold;cursor:pointer;">← MENU</button>
+<span id="game-title" style="font-weight:900;">GAME</span>
 </div>
 
-<div class="info-card">
-<div>CHANCE : <b id="chance">--</b></div>
-<div>TIME WINDOW : <b id="time">--</b></div>
-<div style="margin-top:10px">Signal active !</div>
+<div class="main-box" id="box-style">
+    <div id="signal-tag" class="signal-type">SIGNAL</div>
+    <div class="time-interval" id="play-time">HEURE DE JEU : --:--</div>
+
+    <div class="range-container">
+        <div class="range-display">
+            <span id="val-min">0X</span><span class="range-sep">—</span><span id="val-max">0X</span>
+        </div>
+        <div class="range-labels">
+            <span>Minima</span>
+            <span>Objectif</span>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
+        <div class="stat-item">ID: #<span id="sig-id">000</span></div>
+    </div>
+
+    <div class="timer-zone">
+        PROCHAIN SIGNAL DANS
+        <span id="countdown">00:00</span>
+    </div>
 </div>
 
-<div class="next-timer" id="nextSignal">
-NEXT SIGNAL : --:--
-</div>
-
-<button class="btn-next" onclick="generateNew()">OBTENIR UN SIGNAL</button>
-
+<button class="btn-next" id="nextBtn" onclick="generateNew()">OBTENIR UN SIGNAL</button>
 </div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.expand();
+const tg = window.Telegram.WebApp; tg.expand();
+let timerInterval; let currentGame="";
 
-function openSignal(game){
- document.getElementById('menu').style.display='none';
- document.getElementById('signal-screen').style.display='block';
- document.getElementById('game-name').innerText=game+" AI PREDICTOR";
-}
+// Thèmes couleurs par jeu
+const themes = {
+    "AVIATOR": {accent:"#ff0000", bg:"#000000", gold:"#ffcc00"},
+    "LUCKY JET": {accent:"#9b59b6", bg:"#3b0d6f", gold:"#ffcc00"},
+    "ROCKET QUEEN": {accent:"#ff69b4", bg:"#350035", gold:"#ffcc00"},
+    "AVIATRIX": {accent:"#3498db", bg:"#1b1b3a", gold:"#ffcc00"}
+};
 
-function goBack(){
- document.getElementById('menu').style.display='block';
- document.getElementById('signal-screen').style.display='none';
+function openSignal(name){
+    currentGame=name;
+    document.getElementById('menu').style.display='none';
+    document.getElementById('signal-screen').style.display='block';
+    document.getElementById('game-title').innerText=name;
+
+    const theme=themes[name];
+    const box=document.getElementById('box-style');
+    box.style.borderColor=theme.accent;
+    document.getElementById('nextBtn').style.background=theme.accent;
+
+    const saved=localStorage.getItem('signal_'+currentGame);
+    if(saved){
+        const data=JSON.parse(saved);
+        const now=new Date().getTime();
+        if(now<data.expiry){ displaySavedSignal(data); return;}
+    }
+    generateNew();
 }
 
 function generateNew(){
+    const btn=document.getElementById('nextBtn');
+    btn.disabled=true;
 
- let min=(Math.random()*2+2).toFixed(2);
- let max=(Math.random()*4+5).toFixed(2);
- document.getElementById('big-signal').innerText=min+"X - "+max+"X";
+    const now=new Date().getTime();
+    const saved=JSON.parse(localStorage.getItem('signal_'+currentGame));
+    if(saved && now<saved.expiry){ displaySavedSignal(saved); return;}
 
- let chance=Math.floor(Math.random()*10+90);
- document.getElementById('chance').innerText=chance+"%";
+    const theme=themes[currentGame];
+    const minVal=(Math.random()*2+2).toFixed(1);
+    const maxVal=(Math.random()*10+5).toFixed(1);
+    const precision=Math.floor(Math.random()*19+80);
+    const id=Math.floor(Math.random()*899+100);
+    const isGold=Math.random()>0.8;
 
- let now=new Date();
- now.setMinutes(now.getMinutes()+2);
- let time=now.getHours()+":"+now.getMinutes().toString().padStart(2,'0');
- document.getElementById('time').innerText=time;
+    const box=document.getElementById('box-style');
+    if(isGold){
+        box.classList.add('gold');
+        document.getElementById('signal-tag').innerText="⭐ SIGNAL GOLD ⭐";
+        document.getElementById('signal-tag').className="signal-type type-gold";
+        document.getElementById('val-min').style.color=theme.gold;
+        document.getElementById('val-max').style.color=theme.gold;
+    } else {
+        box.classList.remove('gold');
+        document.getElementById('signal-tag').innerText="🛡️ SIGNAL SAFE 🛡️";
+        document.getElementById('signal-tag').className="signal-type type-safe";
+        document.getElementById('val-min').style.color=theme.accent;
+        document.getElementById('val-max').style.color=theme.accent;
+    }
 
- now.setMinutes(now.getMinutes()+6);
- let next=now.getHours()+":"+now.getMinutes().toString().padStart(2,'0');
- document.getElementById('nextSignal').innerText="NEXT SIGNAL : "+next;
+    const startT=new Date(now+2*60000);
+    const endT=new Date(now+3*60000);
+    document.getElementById('play-time').innerText="🕒 HEURE DE JEU : "+formatTime(startT)+" — "+formatTime(endT);
+
+    const signalData={min:minVal,max:maxVal,perc:precision,id:id,expiry:now+2*60000,start:startT.getTime(),end:endT.getTime(),isGold:isGold};
+    localStorage.setItem('signal_'+currentGame,JSON.stringify(signalData));
+    startTimer(2*60);
 }
-</script>
 
+function startTimer(duration){
+    clearInterval(timerInterval);
+    const display=document.getElementById('countdown');
+    const btn=document.getElementById('nextBtn');
+    btn.disabled=true;
+    let time=duration;
+    function update(){
+        if(time<=0){ clearInterval(timerInterval); display.textContent="SIGNAL PRÊT !"; btn.disabled=false;}
+        else{ let m=Math.floor(time/60); let s=time%60; display.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s); time--; }
+    }
+    update();
+    timerInterval=setInterval(update,1000);
+}
+
+function displaySavedSignal(data){
+    document.getElementById('val-min').innerText=data.min+"X";
+    document.getElementById('val-max').innerText=data.max+"X";
+    document.getElementById('perc').innerText=data.perc;
+    document.getElementById('sig-id').innerText=data.id;
+
+    const box=document.getElementById('box-style');
+    const theme=themes[currentGame];
+    if(data.isGold){
+        box.classList.add('gold');
+        document.getElementById('signal-tag').innerText="⭐ SIGNAL GOLD ⭐";
+        document.getElementById('signal-tag').className="signal-type type-gold";
+        document.getElementById('val-min').style.color=theme.gold;
+        document.getElementById('val-max').style.color=theme.gold;
+    } else {
+        box.classList.remove('gold');
+        document.getElementById('signal-tag').innerText="🛡️ SIGNAL SAFE 🛡️";
+        document.getElementById('signal-tag').className="signal-type type-safe";
+        document.getElementById('val-min').style.color=theme.accent;
+        document.getElementById('val-max').style.color=theme.accent;
+    }
+    document.getElementById('play-time').innerText="🕒 HEURE DE JEU : "+formatTime(new Date(data.start))+" — "+formatTime(new Date(data.end));
+    const remaining=Math.round((data.expiry-new Date().getTime())/1000);
+    startTimer(remaining>0?remaining:0);
+}
+
+function formatTime(date){ return date.getHours().toString().padStart(2,'0')+":"+date.getMinutes().toString().padStart(2,'0'); }
+
+function goBack(){ document.getElementById('menu').style.display='block'; document.getElementById('signal-screen').style.display='none'; clearInterval(timerInterval); }
+</script>
 </body>
 </html>
