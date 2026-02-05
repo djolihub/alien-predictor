@@ -2,73 +2,110 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alien Predictor VIP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root { --bg:#05070a; --card:#11161f; }
+:root {
+    --bg:#05070a;
+    --card:#11161f;
+    --gold:#ffcc00;
+    --accent-lj:#8a2be2;
+    --accent-av:#ff0000;
+    --accent-rq:#ff69b4;
+    --accent-ax:#00bfff;
+}
 
-body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; margin:0; padding:15px; text-align:center; }
+body {
+    margin:0;
+    padding:15px;
+    font-family:'Segoe UI',sans-serif;
+    background:var(--bg);
+    color:white;
+    text-align:center;
+}
 
-#menu { display:block; }
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
-.card { background: var(--card); padding:20px 10px; border-radius:15px; border:1px solid #222; cursor:pointer; transition:0.2s; display:flex; flex-direction:column; align-items:center;}
-.card:active { transform:scale(0.95); }
-
-.game-img { width:90px; height:90px; object-fit:contain; margin-bottom:10px; }
-
-#signal-screen { display:none; animation:fadeIn 0.4s; }
-
-.main-box {
+#menu{display:block;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
+.card{
     background:var(--card);
-    border:3px solid #fff;
-    border-radius:30px;
+    border-radius:15px;
+    padding:20px 10px;
+    border:1px solid #222;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    transition:0.2s;
+}
+.card:active{transform:scale(0.95);}
+.game-img{width:100px;height:100px;margin-bottom:10px;object-fit:contain;}
+
+#signal-screen{display:none;animation:fadeIn 0.4s;}
+.main-box{
+    background:var(--card);
+    border-radius:25px;
     padding:25px 15px;
-    min-height:350px;
+    border:2px solid var(--accent-lj);
+    min-height:320px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
-    transition:0.3s;
+    position:relative;
 }
-.main-box.gold { box-shadow:0 0 25px rgba(255,204,0,0.6); border-color:gold; }
+.main-box.is-gold{border-color:var(--gold);box-shadow:0 0 25px rgba(255,204,0,0.2);}
+.signal-type{font-size:16px;font-weight:900;margin-bottom:15px;}
+.type-gold{color:var(--gold);}
+.type-safe{color:white;}
 
-.signal-type { font-size:16px; font-weight:900; margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; }
-.type-safe { color:white; }
-.type-gold { color:gold; }
+.range-container{text-align:center;margin:15px 0;}
+.range-display{font-size:50px;font-weight:900;display:flex;justify-content:center;align-items:center;gap:15px;}
+.range-sep{font-size:28px;color:#444;}
+.range-labels{display:flex;justify-content:space-between;width:200px;margin-top:5px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;}
 
-.time-interval { font-size:16px; color:white; margin-bottom:15px; font-weight:bold; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); }
+.stats-row{display:flex;justify-content:space-around;width:100%;margin-top:20px;}
+.stat-item{font-size:12px;background:rgba(255,255,255,0.05);padding:8px 15px;border-radius:10px;}
 
-.range-container { display:flex; flex-direction:column; align-items:center; margin:15px 0; }
-.range-display { font-size:50px; font-weight:900; display:flex; align-items:center; justify-content:center; gap:15px; }
-.range-sep { color:#444; font-size:28px; }
-.range-labels { display:flex; justify-content:space-between; width:200px; font-size:10px; color:#aaa; text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
+.timer-zone{margin-top:25px;font-size:13px;color:#888;}
+#countdown{font-size:24px;font-weight:900;color:white;margin-top:5px;}
 
-.stats-row { display:flex; justify-content:space-around; margin-top:20px; width:100%; }
-.stat-item { font-size:12px; background:rgba(255,255,255,0.05); padding:8px 15px; border-radius:12px; }
-
-.timer-zone { margin-top:25px; padding-top:15px; border-top:1px solid #222; font-size:12px; color:#888; }
-#countdown { display:block; font-size:24px; font-weight:bold; margin-top:5px; color:white; }
-
-.btn-next { width:90%; color:black; border:none; padding:18px; border-radius:25px; font-weight:900; margin-top:20px; cursor:pointer; text-transform:uppercase; font-size:16px; transition:0.3s; }
-.btn-next:disabled { background:#222; color:#555; cursor:not-allowed; }
-
-.btn-next.active { animation: pulse 1s infinite; }
-
-@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
-  50% { transform: scale(1.05); box-shadow:0 0 25px rgba(255,255,255,0.5);}
-  100% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
+.btn-next{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:20px;
+    font-weight:900;
+    font-size:16px;
+    margin-top:25px;
+    cursor:pointer;
+    text-transform:uppercase;
+    color:black;
 }
+.btn-next:disabled{background:#222;color:#555;cursor:not-allowed;}
+
+.bar-bg{
+    width:80%;
+    height:8px;
+    background:#222;
+    border-radius:10px;
+    margin:20px auto 10px;
+}
+.bar-fill{
+    height:100%;
+    width:0%;
+    background:var(--accent-lj);
+    border-radius:10px;
+    transition:1.5s;
+}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
 
 <div id="menu">
-<h1>ALIEN <span style="color:#00e5ff">PREDICTOR</span></h1>
-
+<h1>ALIEN <span style="color:var(--accent-lj)">PREDICTOR</span></h1>
 <div class="grid">
     <div class="card" onclick="openSignal('LUCKY JET')">
         <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img">
@@ -90,152 +127,163 @@ body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; mar
 </div>
 
 <div id="signal-screen">
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; width:100%;">
-<button onclick="goBack()" style="background:none;border:none;color:#666;font-weight:bold;cursor:pointer;">← MENU</button>
-<span id="game-title" style="font-weight:900;">GAME</span>
-</div>
-
+<button onclick="goBack()" style="margin-bottom:15px;">← MENU</button>
 <div class="main-box" id="box-style">
-    <div id="signal-tag" class="signal-type">SIGNAL</div>
-    <div class="time-interval" id="play-time">HEURE DE JEU : --:--</div>
-
-    <div class="range-container">
-        <div class="range-display">
-            <span id="val-min">0X</span><span class="range-sep">—</span><span id="val-max">0X</span>
-        </div>
-        <div class="range-labels">
-            <span>Minima</span>
-            <span>Objectif</span>
-        </div>
+    <div id="loading-view">
+        <p style="font-size:12px;">Préparation du signal...</p>
+        <div class="bar-bg"><div class="bar-fill" id="progress"></div></div>
     </div>
-
-    <div class="stats-row">
-        <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
-        <div class="stat-item">ID: #<span id="sig-id">000</span></div>
-    </div>
-
-    <div class="timer-zone">
-        PROCHAIN SIGNAL DANS
-        <span id="countdown">00:00</span>
+    <div id="result-view" style="display:none;">
+        <div id="signal-tag" class="signal-type">SIGNAL</div>
+        <div class="time-interval" id="play-time">--:--</div>
+        <div class="range-container">
+            <div class="range-display">
+                <span id="val-min">0X</span>
+                <span class="range-sep">—</span>
+                <span id="val-max">0X</span>
+            </div>
+            <div class="range-labels">
+                <span>Minima</span>
+                <span>Objectif</span>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
+            <div class="stat-item">ID: #<span id="sig-id">000</span></div>
+        </div>
+        <div class="timer-zone">
+            PROCHAIN SIGNAL DANS
+            <span id="countdown">--:--</span>
+        </div>
     </div>
 </div>
-
 <button class="btn-next" id="nextBtn" onclick="generateNew()">OBTENIR UN SIGNAL</button>
 </div>
 
 <script>
-const tg = window.Telegram.WebApp; tg.expand();
-let timerInterval; let currentGame="";
+const tg=window.Telegram.WebApp;
+tg.expand();
 
-const themes = {
-    "AVIATOR": {accent:"#ff0000", bg:"#000000", gold:"#ffcc00"},
-    "LUCKY JET": {accent:"#9b59b6", bg:"#3b0d6f", gold:"#ffcc00"},
-    "ROCKET QUEEN": {accent:"#ff69b4", bg:"#350035", gold:"#ffcc00"},
-    "AVIATRIX": {accent:"#3498db", bg:"#1b1b3a", gold:"#ffcc00"}
+let currentGame="";
+let timers={};
+let gameAccents={
+    "LUCKY JET":"var(--accent-lj)",
+    "AVIATOR":"var(--accent-av)",
+    "ROCKET QUEEN":"var(--accent-rq)",
+    "AVIATRIX":"var(--accent-ax)"
 };
 
-function openSignal(name){
-    currentGame=name;
+function openSignal(game){
+    currentGame=game;
     document.getElementById('menu').style.display='none';
     document.getElementById('signal-screen').style.display='block';
-    document.getElementById('game-title').innerText=name;
 
-    const theme=themes[name];
-    const box=document.getElementById('box-style');
-    box.style.borderColor=theme.accent;
-    document.getElementById('nextBtn').style.background=theme.accent;
+    let accent=gameAccents[game];
+    document.getElementById('box-style').style.borderColor=accent;
+    document.getElementById('nextBtn').style.background=accent;
 
-    document.getElementById('nextBtn').classList.remove('active'); // bouton non actif au départ
+    const saved=JSON.parse(localStorage.getItem("signal_"+game));
+    if(saved && Date.now()<saved.expiry){
+        startTimer(game,saved.expiry);
+        document.getElementById('nextBtn').disabled=true;
+    }
+    resetSignalDisplay();
+}
+
+function resetSignalDisplay(){
+    document.getElementById('loading-view').style.display='none';
+    document.getElementById('result-view').style.display='block';
+    document.getElementById('val-min').innerText="0X";
+    document.getElementById('val-max').innerText="0X";
+    document.getElementById('perc').innerText="--";
+    document.getElementById('sig-id').innerText="000";
+    document.getElementById('play-time').innerText="--:--";
+    document.getElementById('countdown').innerText="--:--";
+    document.getElementById('nextBtn').disabled=false;
 }
 
 function generateNew(){
-    const btn=document.getElementById('nextBtn');
-    btn.disabled=true;
-    btn.classList.remove('active');
+    document.getElementById('loading-view').style.display='block';
+    document.getElementById('result-view').style.display='none';
+    document.getElementById('progress').style.width='0%';
 
-    const now=new Date().getTime();
-    const saved=JSON.parse(localStorage.getItem('signal_'+currentGame));
-    if(saved && now<saved.expiry){ displaySavedSignal(saved); return;}
+    setTimeout(()=>{document.getElementById('progress').style.width='100%';},100);
 
-    const theme=themes[currentGame];
-    const minVal=(Math.random()*2+2).toFixed(1);
-    const maxVal=(Math.random()*10+5).toFixed(1);
-    const precision=Math.floor(Math.random()*19+80);
-    const id=Math.floor(Math.random()*899+100);
-    const isGold=Math.random()>0.8;
+    setTimeout(()=>{
+        const now=new Date();
+        const isGold=Math.random()>0.8;
+        let c1,c2,perc;
+        if(isGold){
+            c1=Math.random()*(9-6)+6;
+            c2=Math.random()*(20-10)+10;
+            perc=Math.floor(Math.random()*(88-76)+76);
+        } else {
+            c1=Math.random()*(2.5-2)+2;
+            c2=Math.random()*(5-3)+3;
+            perc=Math.floor(Math.random()*(98-80)+80);
+        }
 
-    const box=document.getElementById('box-style');
-    if(isGold){
-        box.classList.add('gold');
-        document.getElementById('signal-tag').innerText="⭐ SIGNAL GOLD ⭐";
-        document.getElementById('signal-tag').className="signal-type type-gold";
-        document.getElementById('val-min').style.color=theme.gold;
-        document.getElementById('val-max').style.color=theme.gold;
-    } else {
-        box.classList.remove('gold');
-        document.getElementById('signal-tag').innerText="🛡️ SIGNAL SAFE 🛡️";
-        document.getElementById('signal-tag').className="signal-type type-safe";
-        document.getElementById('val-min').style.color=theme.accent;
-        document.getElementById('val-max').style.color=theme.accent;
-    }
+        const min=Math.min(c1,c2).toFixed(1);
+        const max=Math.max(c1,c2).toFixed(1);
+        const id=Math.floor(Math.random()*899+100);
+        const startT=new Date(now.getTime()+2*60000);
+        const endT=new Date(now.getTime()+3*60000);
+        const timeStr=startT.getHours().toString().padStart(2,'0')+":"+startT.getMinutes().toString().padStart(2,'0')+" — "+
+                      endT.getHours().toString().padStart(2,'0')+":"+endT.getMinutes().toString().padStart(2,'0');
 
-    const startT=new Date(now+2*60000);
-    const endT=new Date(now+3*60000);
-    document.getElementById('play-time').innerText="🕒 HEURE DE JEU : "+formatTime(startT)+" — "+formatTime(endT);
+        const expiry=Date.now()+120*1000;
+        localStorage.setItem("signal_"+currentGame,JSON.stringify({expiry:expiry}));
 
-    const signalData={min:minVal,max:maxVal,perc:precision,id:id,expiry:now+2*60000,start:startT.getTime(),end:endT.getTime(),isGold:isGold};
-    localStorage.setItem('signal_'+currentGame,JSON.stringify(signalData));
-    startTimer(2*60);
+        document.getElementById('val-min').innerText=min+"X";
+        document.getElementById('val-max').innerText=max+"X";
+        document.getElementById('perc').innerText=perc;
+        document.getElementById('sig-id').innerText=id;
+        document.getElementById('play-time').innerText=timeStr;
+
+        const box=document.getElementById('box-style');
+        const tag=document.getElementById('signal-tag');
+        if(isGold){
+            tag.innerText="⭐ SIGNAL GOLD ⭐";
+            tag.className="signal-type type-gold";
+            box.classList.add('is-gold');
+            document.getElementById('val-min').style.color="var(--gold)";
+            document.getElementById('val-max').style.color="var(--gold)";
+        } else {
+            tag.innerText="🛡️ SIGNAL SAFE 🛡️";
+            tag.className="signal-type type-safe";
+            box.classList.remove('is-gold');
+            document.getElementById('val-min').style.color="white";
+            document.getElementById('val-max').style.color="white";
+        }
+
+        document.getElementById('loading-view').style.display='none';
+        document.getElementById('result-view').style.display='block';
+        document.getElementById('nextBtn').disabled=true;
+        startTimer(currentGame,expiry);
+    },1800);
 }
 
-function startTimer(duration){
-    clearInterval(timerInterval);
-    const display=document.getElementById('countdown');
-    const btn=document.getElementById('nextBtn');
-    btn.disabled=true;
-    btn.classList.remove('active');
-    let time=duration;
-    function update(){
-        if(time<=0){ 
-            clearInterval(timerInterval); 
-            display.textContent="SIGNAL PRÊT !"; 
-            btn.disabled=false; 
-            btn.classList.add('active'); // pulse quand actif
-        } else{ let m=Math.floor(time/60); let s=time%60; display.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s); time--; }
-    }
-    update();
-    timerInterval=setInterval(update,1000);
+function startTimer(game,expiry){
+    if(timers[game]) clearInterval(timers[game]);
+    timers[game]=setInterval(()=>{
+        const diff=Math.floor((expiry-Date.now())/1000);
+        if(diff<=0){
+            clearInterval(timers[game]);
+            document.getElementById('nextBtn').disabled=false;
+            document.getElementById('countdown').innerText="SIGNAL PRÊT !";
+        } else {
+            let m=Math.floor(diff/60);
+            let s=diff%60;
+            document.getElementById('countdown').innerText=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+        }
+    },1000);
 }
 
-function displaySavedSignal(data){
-    document.getElementById('val-min').innerText=data.min+"X";
-    document.getElementById('val-max').innerText=data.max+"X";
-    document.getElementById('perc').innerText=data.perc;
-    document.getElementById('sig-id').innerText=data.id;
-
-    const box=document.getElementById('box-style');
-    const theme=themes[currentGame];
-    if(data.isGold){
-        box.classList.add('gold');
-        document.getElementById('signal-tag').innerText="⭐ SIGNAL GOLD ⭐";
-        document.getElementById('signal-tag').className="signal-type type-gold";
-        document.getElementById('val-min').style.color=theme.gold;
-        document.getElementById('val-max').style.color=theme.gold;
-    } else {
-        box.classList.remove('gold');
-        document.getElementById('signal-tag').innerText="🛡️ SIGNAL SAFE 🛡️";
-        document.getElementById('signal-tag').className="signal-type type-safe";
-        document.getElementById('val-min').style.color=theme.accent;
-        document.getElementById('val-max').style.color=theme.accent;
-    }
-    document.getElementById('play-time').innerText="🕒 HEURE DE JEU : "+formatTime(new Date(data.start))+" — "+formatTime(new Date(data.end));
-    const remaining=Math.round((data.expiry-new Date().getTime())/1000);
-    startTimer(remaining>0?remaining:0);
+function goBack(){
+    document.getElementById('menu').style.display='block';
+    document.getElementById('signal-screen').style.display='none';
 }
-
-function formatTime(date){ return date.getHours().toString().padStart(2,'0')+":"+date.getMinutes().toString().padStart(2,'0'); }
-
-function goBack(){ document.getElementById('menu').style.display='block'; document.getElementById('signal-screen').style.display='none'; clearInterval(timerInterval); document.getElementById('nextBtn').classList.remove('active'); }
 </script>
+
 </body>
 </html>
