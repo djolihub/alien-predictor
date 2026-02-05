@@ -5,119 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Alien Predictor VIP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
 :root { --bg:#05070a; --card:#11161f; }
-
 body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; margin:0; padding:15px; text-align:center; }
 
-#menu { display:block; }
 .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
-.card { background: var(--card); padding:20px 10px; border-radius:15px; border:1px solid #222; cursor:pointer; transition:0.2s; display:flex; flex-direction:column; align-items:center;}
-.card:active { transform:scale(0.95); }
-
+.card { background:var(--card); padding:20px 10px; border-radius:15px; border:1px solid #222; cursor:pointer; display:flex; flex-direction:column; align-items:center;}
 .game-img { width:90px; height:90px; object-fit:contain; margin-bottom:10px; }
 
-#signal-screen { display:none; animation:fadeIn 0.4s; }
+#signal-screen { display:none; }
 
-.main-box {
-    background:var(--card);
-    border:3px solid #fff;
-    border-radius:30px;
-    padding:25px 15px;
-    min-height:350px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
-    transition:0.3s;
-}
-.main-box.gold { box-shadow:0 0 25px rgba(255,204,0,0.6); border-color:gold; }
+.main-box { background:var(--card); border:3px solid #fff; border-radius:30px; padding:25px; min-height:350px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.main-box.gold { border-color:gold; box-shadow:0 0 25px rgba(255,204,0,0.6); }
 
-.signal-type { font-size:16px; font-weight:900; margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; }
-.type-safe { color:white; }
-.type-gold { color:gold; }
-
-.time-interval { font-size:16px; color:white; margin-bottom:15px; font-weight:bold; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:15px; border:1px solid rgba(255,255,255,0.1); }
-
-.range-container { display:flex; flex-direction:column; align-items:center; margin:15px 0; }
-.range-display { font-size:50px; font-weight:900; display:flex; align-items:center; justify-content:center; gap:15px; }
-.range-sep { color:#444; font-size:28px; }
-.range-labels { display:flex; justify-content:space-between; width:200px; font-size:10px; color:#aaa; text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
-
-.stats-row { display:flex; justify-content:space-around; margin-top:20px; width:100%; }
-.stat-item { font-size:12px; background:rgba(255,255,255,0.05); padding:8px 15px; border-radius:12px; }
-
-.timer-zone { margin-top:25px; padding-top:15px; border-top:1px solid #222; font-size:12px; color:#888; }
-#countdown { display:block; font-size:24px; font-weight:bold; margin-top:5px; color:white; }
-
-.btn-next { width:90%; color:black; border:none; padding:18px; border-radius:25px; font-weight:900; margin-top:20px; cursor:pointer; text-transform:uppercase; font-size:16px; transition:0.3s; }
-.btn-next:disabled { background:#222; color:#555; cursor:not-allowed; }
-
-.btn-next.active { animation: pulse 1s infinite; }
-
-@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
-  50% { transform: scale(1.05); box-shadow:0 0 25px rgba(255,255,255,0.5);}
-  100% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
-}
+.range-display { font-size:50px; font-weight:900; }
+.btn-next { width:90%; border:none; padding:18px; border-radius:25px; font-weight:900; margin-top:20px; cursor:pointer; }
+.btn-next:disabled { background:#222; color:#555; }
 </style>
 </head>
+
 <body>
 
 <div id="menu">
 <h1>ALIEN <span style="color:#00e5ff">PREDICTOR</span></h1>
-
 <div class="grid">
-    <div class="card" onclick="openSignal('LUCKY JET')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img">
-        <span>Lucky Jet</span>
-    </div>
-    <div class="card" onclick="openSignal('AVIATOR')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img">
-        <span>Aviator</span>
-    </div>
-    <div class="card" onclick="openSignal('ROCKET QUEEN')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img">
-        <span>Rocket Queen</span>
-    </div>
-    <div class="card" onclick="openSignal('AVIATRIX')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img">
-        <span>Aviatrix</span>
-    </div>
+<div class="card" onclick="openSignal('LUCKY JET')"><img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img"><span>Lucky Jet</span></div>
+<div class="card" onclick="openSignal('AVIATOR')"><img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img"><span>Aviator</span></div>
+<div class="card" onclick="openSignal('ROCKET QUEEN')"><img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img"><span>Rocket Queen</span></div>
+<div class="card" onclick="openSignal('AVIATRIX')"><img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img"><span>Aviatrix</span></div>
 </div>
 </div>
 
 <div id="signal-screen">
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; width:100%;">
-<button onclick="goBack()" style="background:none;border:none;color:#666;font-weight:bold;cursor:pointer;">← MENU</button>
-<span id="game-title" style="font-weight:900;">GAME</span>
-</div>
+<button onclick="goBack()">← MENU</button>
+<h2 id="game-title"></h2>
 
 <div class="main-box" id="box-style">
-    <div id="signal-tag" class="signal-type">SIGNAL</div>
-    <div class="time-interval" id="play-time">HEURE DE JEU : --:--</div>
-
-    <div class="range-container">
-        <div class="range-display">
-            <span id="val-min">0X</span><span class="range-sep">—</span><span id="val-max">0X</span>
-        </div>
-        <div class="range-labels">
-            <span>Minima</span>
-            <span>Objectif</span>
-        </div>
-    </div>
-
-    <div class="stats-row">
-        <div class="stat-item">PRÉCISION: <span id="perc">--</span>%</div>
-        <div class="stat-item">ID: #<span id="sig-id">000</span></div>
-    </div>
-
-    <div class="timer-zone">
-        PROCHAIN SIGNAL DANS
-        <span id="countdown">00:00</span>
-    </div>
+<div id="play-time">HEURE DE JEU : --:--</div>
+<div class="range-display"><span id="val-min">0X</span> — <span id="val-max">0X</span></div>
+<div>PRÉCISION <span id="perc">--</span>% | ID #<span id="sig-id">000</span></div>
+<div>PROCHAIN SIGNAL : <span id="countdown">--:--</span></div>
 </div>
 
 <button class="btn-next" id="nextBtn" onclick="generateNew()">OBTENIR UN SIGNAL</button>
@@ -125,14 +53,9 @@ body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; mar
 
 <script>
 const tg = window.Telegram.WebApp; tg.expand();
-let timerInterval; let currentGame="";
 
-const themes = {
-    "AVIATOR": {accent:"#ff0000", bg:"#000000", gold:"#ffcc00"},
-    "LUCKY JET": {accent:"#9b59b6", bg:"#3b0d6f", gold:"#ffcc00"},
-    "ROCKET QUEEN": {accent:"#ff69b4", bg:"#350035", gold:"#ffcc00"},
-    "AVIATRIX": {accent:"#3498db", bg:"#1b1b3a", gold:"#ffcc00"}
-};
+let currentGame="";
+let timers={}; // 🔥 timers indépendants par jeu
 
 function openSignal(name){
     currentGame=name;
@@ -140,71 +63,26 @@ function openSignal(name){
     document.getElementById('signal-screen').style.display='block';
     document.getElementById('game-title').innerText=name;
 
-    const theme=themes[name];
-    const box=document.getElementById('box-style');
-    box.style.borderColor=theme.accent;
-    document.getElementById('nextBtn').style.background=theme.accent;
-
-    document.getElementById('nextBtn').classList.remove('active'); // bouton non actif au départ
+    const saved = JSON.parse(localStorage.getItem('signal_'+name));
+    if(saved) displaySavedSignal(saved);
 }
 
 function generateNew(){
-    const btn=document.getElementById('nextBtn');
-    btn.disabled=true;
-    btn.classList.remove('active');
-
-    const now=new Date().getTime();
+    const now=Date.now();
     const saved=JSON.parse(localStorage.getItem('signal_'+currentGame));
     if(saved && now<saved.expiry){ displaySavedSignal(saved); return;}
 
-    const theme=themes[currentGame];
-    const minVal=(Math.random()*2+2).toFixed(1);
-    const maxVal=(Math.random()*10+5).toFixed(1);
-    const precision=Math.floor(Math.random()*19+80);
-    const id=Math.floor(Math.random()*899+100);
-    const isGold=Math.random()>0.8;
+    const min=(Math.random()*2+2).toFixed(1);
+    const max=(Math.random()*10+5).toFixed(1);
+    const perc=Math.floor(Math.random()*19+80);
+    const id=Math.floor(Math.random()*900+100);
 
-    const box=document.getElementById('box-style');
-    if(isGold){
-        box.classList.add('gold');
-        document.getElementById('signal-tag').innerText="⭐ SIGNAL GOLD ⭐";
-        document.getElementById('signal-tag').className="signal-type type-gold";
-        document.getElementById('val-min').style.color=theme.gold;
-        document.getElementById('val-max').style.color=theme.gold;
-    } else {
-        box.classList.remove('gold');
-        document.getElementById('signal-tag').innerText="🛡️ SIGNAL SAFE 🛡️";
-        document.getElementById('signal-tag').className="signal-type type-safe";
-        document.getElementById('val-min').style.color=theme.accent;
-        document.getElementById('val-max').style.color=theme.accent;
-    }
+    const start=new Date(now+120000);
+    const end=new Date(now+180000);
 
-    const startT=new Date(now+2*60000);
-    const endT=new Date(now+3*60000);
-    document.getElementById('play-time').innerText="🕒 HEURE DE JEU : "+formatTime(startT)+" — "+formatTime(endT);
-
-    const signalData={min:minVal,max:maxVal,perc:precision,id:id,expiry:now+2*60000,start:startT.getTime(),end:endT.getTime(),isGold:isGold};
-    localStorage.setItem('signal_'+currentGame,JSON.stringify(signalData));
-    startTimer(2*60);
-}
-
-function startTimer(duration){
-    clearInterval(timerInterval);
-    const display=document.getElementById('countdown');
-    const btn=document.getElementById('nextBtn');
-    btn.disabled=true;
-    btn.classList.remove('active');
-    let time=duration;
-    function update(){
-        if(time<=0){ 
-            clearInterval(timerInterval); 
-            display.textContent="SIGNAL PRÊT !"; 
-            btn.disabled=false; 
-            btn.classList.add('active'); // pulse quand actif
-        } else{ let m=Math.floor(time/60); let s=time%60; display.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s); time--; }
-    }
-    update();
-    timerInterval=setInterval(update,1000);
+    const data={min,max,perc,id,start:start.getTime(),end:end.getTime(),expiry:now+120000};
+    localStorage.setItem('signal_'+currentGame,JSON.stringify(data));
+    displaySavedSignal(data);
 }
 
 function displaySavedSignal(data){
@@ -213,29 +91,36 @@ function displaySavedSignal(data){
     document.getElementById('perc').innerText=data.perc;
     document.getElementById('sig-id').innerText=data.id;
 
-    const box=document.getElementById('box-style');
-    const theme=themes[currentGame];
-    if(data.isGold){
-        box.classList.add('gold');
-        document.getElementById('signal-tag').innerText="⭐ SIGNAL GOLD ⭐";
-        document.getElementById('signal-tag').className="signal-type type-gold";
-        document.getElementById('val-min').style.color=theme.gold;
-        document.getElementById('val-max').style.color=theme.gold;
-    } else {
-        box.classList.remove('gold');
-        document.getElementById('signal-tag').innerText="🛡️ SIGNAL SAFE 🛡️";
-        document.getElementById('signal-tag').className="signal-type type-safe";
-        document.getElementById('val-min').style.color=theme.accent;
-        document.getElementById('val-max').style.color=theme.accent;
-    }
-    document.getElementById('play-time').innerText="🕒 HEURE DE JEU : "+formatTime(new Date(data.start))+" — "+formatTime(new Date(data.end));
-    const remaining=Math.round((data.expiry-new Date().getTime())/1000);
-    startTimer(remaining>0?remaining:0);
+    const start=new Date(data.start);
+    const end=new Date(data.end);
+    document.getElementById('play-time').innerText="HEURE DE JEU : "+formatTime(start)+" — "+formatTime(end);
+
+    startTimer(currentGame, Math.max(0,Math.floor((data.expiry-Date.now())/1000)));
 }
 
-function formatTime(date){ return date.getHours().toString().padStart(2,'0')+":"+date.getMinutes().toString().padStart(2,'0'); }
+function startTimer(game,duration){
+    clearInterval(timers[game]);
+    const display=document.getElementById('countdown');
+    const btn=document.getElementById('nextBtn');
 
-function goBack(){ document.getElementById('menu').style.display='block'; document.getElementById('signal-screen').style.display='none'; clearInterval(timerInterval); document.getElementById('nextBtn').classList.remove('active'); }
+    function update(){
+        if(currentGame!==game) return; // 🔥 protège les autres jeux
+        if(duration<=0){ display.textContent="SIGNAL PRÊT"; btn.disabled=false; return;}
+        let m=Math.floor(duration/60), s=duration%60;
+        display.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+        duration--;
+    }
+    btn.disabled=true;
+    update();
+    timers[game]=setInterval(update,1000);
+}
+
+function formatTime(d){ return d.getHours().toString().padStart(2,'0')+":"+d.getMinutes().toString().padStart(2,'0'); }
+
+function goBack(){
+    document.getElementById('menu').style.display='block';
+    document.getElementById('signal-screen').style.display='none';
+}
 </script>
 </body>
-  </html>
+</html>
