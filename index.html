@@ -16,151 +16,27 @@ body {
     padding:15px;
     text-align:center;
 }
-
-.grid {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-    margin-top:20px;
-}
-
-.card {
-    background:var(--card);
-    padding:20px 10px;
-    border-radius:15px;
-    border:1px solid #222;
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+.card { background:var(--card); padding:20px 10px; border-radius:15px; border:1px solid #222; cursor:pointer; display:flex; flex-direction:column; align-items:center;}
 .card:active { transform:scale(0.95); }
-
-.game-img {
-    width:90px;
-    height:90px;
-    object-fit:contain;
-    margin-bottom:10px;
-}
-
+.game-img { width:90px; height:90px; object-fit:contain; margin-bottom:10px; }
 #signal-screen { display:none; }
-
-.main-box {
-    background:var(--card);
-    border:3px solid #fff;
-    border-radius:30px;
-    padding:25px 15px;
-    min-height:350px;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    align-items:center;
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
-}
-
-.main-box.gold {
-    border-color:gold;
-    box-shadow:0 0 25px rgba(255,204,0,0.6);
-}
-
-/* Heure de jeu en haut */
-.play-zone{
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    padding:12px 18px;
-    border-radius:18px;
-    margin-bottom:20px;
-    width:100%;
-    text-align:center;
-}
-
-.play-label{
-    font-size:12px;
-    letter-spacing:1px;
-    color:#aaa;
-}
-
-.play-time{
-    font-size:20px;
-    font-weight:900;
-    margin-top:3px;
-}
-
-.range-display {
-    font-size:50px;
-    font-weight:900;
-    margin-bottom:20px;
-}
-
-.stats-zone{
-    display:flex;
-    justify-content:space-between;
-    width:100%;
-    gap:20px;
-    margin-top:10px;
-}
-
-.stat-big{
-    flex:1;
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    padding:15px;
-    border-radius:18px;
-    text-align:center;
-}
-
-.stat-title{
-    font-size:12px;
-    color:#aaa;
-    letter-spacing:1px;
-}
-
-.stat-value{
-    font-size:26px;
-    font-weight:900;
-    margin-top:4px;
-}
-
-.timer-zone {
-    margin-top:20px;
-    font-size:14px;
-    color:#aaa;
-}
-
-#countdown {
-    font-size:24px;
-    font-weight:bold;
-    margin-top:5px;
-    color:white;
-}
-
-.btn-next {
-    width:90%;
-    border:none;
-    padding:18px;
-    border-radius:25px;
-    font-weight:900;
-    margin-top:20px;
-    cursor:pointer;
-    font-size:16px;
-}
-
-.btn-next:disabled {
-    background:#222;
-    color:#555;
-    cursor:not-allowed;
-}
-
-.btn-next.active {
-    animation:pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% { transform:scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
-    50% { transform:scale(1.05); box-shadow:0 0 25px rgba(255,255,255,0.5);}
-    100% { transform:scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
-}
+.main-box { background:var(--card); border:3px solid #fff; border-radius:30px; padding:25px 15px; min-height:350px; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; box-shadow:0 0 15px rgba(255,255,255,0.1);}
+.main-box.gold { border-color:gold; box-shadow:0 0 25px rgba(255,204,0,0.6);}
+.play-zone{background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:12px 18px; border-radius:18px; margin-bottom:20px; width:100%; text-align:center;}
+.play-label{font-size:12px; letter-spacing:1px; color:#aaa;}
+.play-time{font-size:20px; font-weight:900; margin-top:3px;}
+.range-display { font-size:50px; font-weight:900; margin-bottom:20px;}
+.stats-zone{display:flex; justify-content:space-between; width:100%; gap:20px; margin-top:10px;}
+.stat-big{flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:15px; border-radius:18px; text-align:center;}
+.stat-title{font-size:12px; color:#aaa; letter-spacing:1px;}
+.stat-value{font-size:26px; font-weight:900; margin-top:4px;}
+.timer-zone { margin-top:20px; font-size:14px; color:#aaa;}
+#countdown { font-size:24px; font-weight:bold; margin-top:5px; color:white;}
+.btn-next { width:90%; border:none; padding:18px; border-radius:25px; font-weight:900; margin-top:20px; cursor:pointer; font-size:16px;}
+.btn-next:disabled { background:#222; color:#555; cursor:not-allowed;}
+.btn-next.active { animation:pulse 1s infinite;}
+@keyframes pulse { 0% { transform:scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);} 50% { transform:scale(1.05); box-shadow:0 0 25px rgba(255,255,255,0.5);} 100% { transform:scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}}
 </style>
 </head>
 
@@ -168,23 +44,18 @@ body {
 
 <div id="menu">
 <h1>ALIEN <span style="color:#00e5ff">PREDICTOR</span></h1>
-
 <div class="grid">
     <div class="card" onclick="openSignal('LUCKY JET')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img">
-        <span>Lucky Jet</span>
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img"><span>Lucky Jet</span>
     </div>
     <div class="card" onclick="openSignal('AVIATOR')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img">
-        <span>Aviator</span>
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img"><span>Aviator</span>
     </div>
     <div class="card" onclick="openSignal('ROCKET QUEEN')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img">
-        <span>Rocket Queen</span>
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img"><span>Rocket Queen</span>
     </div>
     <div class="card" onclick="openSignal('AVIATRIX')">
-        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img">
-        <span>Aviatrix</span>
+        <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img"><span>Aviatrix</span>
     </div>
 </div>
 </div>
@@ -231,7 +102,7 @@ const tg = window.Telegram.WebApp; tg.expand();
 
 let currentGame="";
 let timers={};
-
+let safeCount = 0; // compteur SAFE pour décider GOLD
 const themes = {
     "AVIATOR": {accent:"#ff0000", gold:"#ffcc00"},
     "LUCKY JET": {accent:"#9b59b6", gold:"#ffcc00"},
@@ -244,11 +115,9 @@ function openSignal(name){
     document.getElementById('menu').style.display='none';
     document.getElementById('signal-screen').style.display='block';
     document.getElementById('game-title').innerText=name;
-
     const theme=themes[name];
     document.getElementById('box-style').style.borderColor=theme.accent;
     document.getElementById('nextBtn').style.background=theme.accent;
-
     const saved=JSON.parse(localStorage.getItem('signal_'+name));
     if(saved) displaySavedSignal(saved);
 }
@@ -258,15 +127,33 @@ function generateNew(){
     const saved=JSON.parse(localStorage.getItem('signal_'+currentGame));
     if(saved && now<saved.expiry){ displaySavedSignal(saved); return;}
 
-    const min=(Math.random()*2+2).toFixed(1);
-    const max=(Math.random()*10+5).toFixed(1);
+    let min, max, isGold;
+    // Décider SAFE/GOLD
+    if(safeCount>=3){ // Après 3 SAFE, GOLD possible
+        isGold = Math.random() > 0.3; // 70% chance GOLD
+        if(isGold) safeCount=0;
+        else safeCount++;
+    } else {
+        isGold = false;
+        safeCount++;
+    }
+
+    if(isGold){
+        min=(Math.random()*3+5).toFixed(1); // GOLD min 5-8
+        max=(Math.random()*10+8).toFixed(1); // GOLD max 8-18
+        // intervalle aléatoire pour GOLD
+        var start=new Date(now + (2+Math.random()*2)*60000);
+        var end=new Date(start.getTime() + 60000); // 1 minute de jeu
+    } else {
+        min=(Math.random()*2+2).toFixed(1); // SAFE min 2-4
+        max=(Math.random()*4+4).toFixed(1); // SAFE max 4-8
+        // signal SAFE exact +2 minutes
+        var start=new Date(now + 2*60000);
+        var end=new Date(start.getTime() + 60000);
+    }
+
     const perc=Math.floor(Math.random()*19+80);
     const id=Math.floor(Math.random()*900+100);
-    const isGold=Math.random()>0.8;
-
-    const start=new Date(now+120000);
-    const end=new Date(now+180000);
-
     const data={min,max,perc,id,start:start.getTime(),end:end.getTime(),expiry:now+120000,isGold};
     localStorage.setItem('signal_'+currentGame,JSON.stringify(data));
     displaySavedSignal(data);
@@ -275,7 +162,6 @@ function generateNew(){
 function displaySavedSignal(data){
     const theme=themes[currentGame];
     const box=document.getElementById('box-style');
-
     document.getElementById('val-min').innerText=data.min+"X";
     document.getElementById('val-max').innerText=data.max+"X";
     document.getElementById('perc').innerText=data.perc;
