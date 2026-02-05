@@ -2,90 +2,56 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alien Predictor VIP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
-:root {
-    --accent: #00e5ff;
-    --gold: #ffcc00;
-    --bg: #05070a;
-    --card: #11161f;
-}
-body {
-    background: var(--bg);
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    padding: 15px;
-    text-align: center;
+body{
+background:#05070a;
+color:white;
+font-family:Segoe UI;
+text-align:center;
+padding:15px;
 }
 
-/* Menu */
-#menu { display: block; }
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 20px;
-}
-.card {
-    background: var(--card);
-    padding: 20px 10px;
-    border-radius: 15px;
-    border: 1px solid #222;
-    cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.card:active { transform: scale(0.95); border-color: var(--accent); }
-
-.game-img {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    margin-bottom: 10px;
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:20px;
 }
 
-/* Signal Screen */
-#signal-screen { display: none; animation: fadeIn 0.4s; }
-.main-box {
-    background: var(--card);
-    border: 2px solid var(--accent);
-    border-radius: 25px;
-    padding: 25px 10px;
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.card{
+background:#11161f;
+padding:20px;
+border-radius:15px;
+cursor:pointer;
 }
-.main-box.is-gold { border-color: var(--gold); box-shadow: 0 0 25px rgba(255,204,0,0.2); }
 
-.signal-type { font-size: 16px; font-weight: 900; margin-bottom: 10px; }
-.type-safe { color: var(--accent); }
-.type-gold { color: var(--gold); }
+#signal-screen{display:none;}
 
-.range-display { font-size: 40px; font-weight: 900; margin: 10px 0; }
-.timer-zone { margin-top: 20px; font-size: 14px; color: #888; }
-#countdown { font-size: 24px; color: white; font-weight: bold; }
-
-.btn-next {
-    width: 100%;
-    background: var(--accent);
-    color: black;
-    border: none;
-    padding: 18px;
-    border-radius: 15px;
-    font-weight: 900;
-    margin-top: 20px;
-    cursor: pointer;
+.main-box{
+background:#11161f;
+border:2px solid #00e5ff;
+border-radius:20px;
+padding:25px;
+margin-top:20px;
 }
-.btn-next:disabled { background: #222; color: #555; }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.range{font-size:35px;font-weight:bold;margin:15px 0;}
+#countdown{font-size:22px;margin-top:10px;}
+
+.btn{
+background:#00e5ff;
+border:none;
+padding:15px;
+border-radius:12px;
+font-weight:bold;
+width:100%;
+margin-top:20px;
+}
+.btn:disabled{background:#333;color:#777;}
 </style>
 </head>
 
@@ -93,167 +59,122 @@ body {
 
 <!-- MENU -->
 <div id="menu">
-    <h1>ALIEN <span style="color:var(--accent)">PREDICTOR</span></h1>
-    <div class="grid">
-        <div class="card" onclick="openSignal('LUCKY JET')">
-            <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/luckyjet.png" class="game-img">
-            <span>Lucky Jet</span>
-        </div>
-        <div class="card" onclick="openSignal('AVIATOR')">
-            <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviator.png" class="game-img">
-            <span>Aviator</span>
-        </div>
-        <div class="card" onclick="openSignal('ROCKET QUEEN')">
-            <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/rocketqueen.png" class="game-img">
-            <span>Rocket Queen</span>
-        </div>
-        <div class="card" onclick="openSignal('AVIATRIX')">
-            <img src="https://raw.githubusercontent.com/djolihub/Alien-image/main/aviatrix.png" class="game-img">
-            <span>Aviatrix</span>
-        </div>
-    </div>
+<h2>ALIEN PREDICTOR</h2>
+<div class="grid">
+<div class="card" onclick="openGame('LUCKY JET')">Lucky Jet</div>
+<div class="card" onclick="openGame('AVIATOR')">Aviator</div>
+<div class="card" onclick="openGame('ROCKET QUEEN')">Rocket Queen</div>
+<div class="card" onclick="openGame('AVIATRIX')">Aviatrix</div>
+</div>
 </div>
 
-<!-- SIGNAL SCREEN -->
+<!-- SIGNAL -->
 <div id="signal-screen">
-    <button onclick="goBack()">← MENU</button>
-    <h2 id="game-title" style="margin-top:10px;">GAME</h2>
+<button onclick="backMenu()">← MENU</button>
+<h2 id="game-title"></h2>
 
-    <div class="main-box" id="box-style">
-        <div id="signal-tag" class="signal-type type-safe">SIGNAL</div>
-        <div class="range-display"><span id="val-min">0X</span> — <span id="val-max">0X</span></div>
-        <div class="timer-zone">Prochain signal dans <span id="countdown">--:--</span></div>
-    </div>
+<div class="main-box">
+<div id="type">SIGNAL</div>
+<div class="range"><span id="min">0X</span> - <span id="max">0X</span></div>
+<div id="time">Heure : --:--</div>
+<div id="precision">Précision : --%</div>
+<div id="countdown">--:--</div>
+</div>
 
-    <button class="btn-next" id="nextBtn" onclick="generateNew()">OBTENIR UN SIGNAL</button>
+<button id="btn" class="btn" onclick="getSignal()">OBTENIR UN SIGNAL</button>
 </div>
 
 <script>
-const tg = window.Telegram.WebApp;
-tg.expand();
+let currentGame="";
+let timer;
 
-let timerInterval;
-let currentGame = "";
-
-// Ouvrir un jeu
-function openSignal(name) {
-    currentGame = name;
-    document.getElementById('menu').style.display = 'none';
-    document.getElementById('signal-screen').style.display = 'block';
-    document.getElementById('game-title').innerText = name;
-
-    // Charger le signal existant si cooldown pas terminé
-    const saved = JSON.parse(localStorage.getItem('signal_' + name));
-    if(saved) {
-        const now = new Date().getTime();
-        if(now < saved.expiry) {
-            displaySavedSignal(saved);
-        } else {
-            resetDisplay();
-        }
-    } else {
-        resetDisplay();
-    }
+function openGame(game){
+currentGame=game;
+menu.style.display="none";
+signal-screen.style.display="block";
+game-title.innerText=game;
+loadSavedSignal();
 }
 
-// Réinitialiser l'affichage sans générer de signal
-function resetDisplay() {
-    document.getElementById('val-min').innerText = "0X";
-    document.getElementById('val-max').innerText = "0X";
-    document.getElementById('signal-tag').innerText = "SIGNAL";
-    document.getElementById('signal-tag').className = "signal-type type-safe";
-    document.getElementById('countdown').innerText = "--:--";
-    clearInterval(timerInterval);
+function backMenu(){
+signal-screen.style.display="none";
+menu.style.display="block";
+clearInterval(timer);
 }
 
-// Générer un signal
-function generateNew() {
-    const now = new Date().getTime();
-    let saved = JSON.parse(localStorage.getItem('signal_' + currentGame));
-    if(saved && now < saved.expiry) return; // Respect du cooldown
-
-    // Déterminer cooldown minimum 2 minutes
-    const waitTime = 120; // secondes
-    const expiryTime = now + waitTime * 1000;
-
-    // Générer signal aléatoire selon type
-    const isGold = Math.random() > 0.8;
-    let minVal, maxVal, precision;
-    switch(currentGame) {
-        case "LUCKY JET":
-            minVal = (Math.random()*3+2).toFixed(1);
-            maxVal = (Math.random()*7+5).toFixed(1);
-            break;
-        case "AVIATOR":
-            minVal = (Math.random()*2+1).toFixed(1);
-            maxVal = (Math.random()*6+4).toFixed(1);
-            break;
-        case "ROCKET QUEEN":
-            minVal = (Math.random()*4+3).toFixed(1);
-            maxVal = (Math.random()*10+7).toFixed(1);
-            break;
-        case "AVIATRIX":
-            minVal = (Math.random()*1+2).toFixed(1);
-            maxVal = (Math.random()*5+3).toFixed(1);
-            break;
-    }
-    precision = Math.floor(Math.random() * (98-80+1)+80);
-
-    const signalData = {
-        isGold: isGold,
-        min: minVal,
-        max: maxVal,
-        perc: precision,
-        expiry: expiryTime
-    };
-
-    localStorage.setItem('signal_' + currentGame, JSON.stringify(signalData));
-    displaySavedSignal(signalData);
+function random(min,max){
+return (Math.random()*(max-min)+min).toFixed(1);
 }
 
-// Afficher signal sauvegardé
-function displaySavedSignal(data) {
-    document.getElementById('val-min').innerText = data.min + "X";
-    document.getElementById('val-max').innerText = data.max + "X";
-    document.getElementById('signal-tag').innerText = data.isGold ? "⭐ SIGNAL GOLD ⭐" : "🛡️ SIGNAL SAFE 🛡️";
-    document.getElementById('signal-tag').className = data.isGold ? "signal-type type-gold" : "signal-type type-safe";
-    startTimer(Math.round((data.expiry - new Date().getTime())/1000));
+function generateSignal(){
+let now=new Date();
+let playTime=new Date(now.getTime()+120000); // +2 min
+
+return{
+type:Math.random()<0.8?"SAFE":"GOLD",
+min:random(2,4),
+max:random(5,12),
+precision:Math.floor(Math.random()*10+90),
+play:playTime.getHours().toString().padStart(2,'0')+":"+
+playTime.getMinutes().toString().padStart(2,'0'),
+expiry:now.getTime()+120000
+}
 }
 
-// Timer de cooldown
-function startTimer(duration) {
-    clearInterval(timerInterval);
-    const display = document.getElementById('countdown');
-    const btn = document.getElementById('nextBtn');
-    btn.disabled = true;
+function getSignal(){
+let saved=JSON.parse(localStorage.getItem(currentGame));
+if(saved && Date.now()<saved.expiry) return;
 
-    function update() {
-        const saved = JSON.parse(localStorage.getItem('signal_' + currentGame));
-        if(!saved) return;
-        let diff = Math.round((saved.expiry - new Date().getTime())/1000);
-        if(diff <= 0) {
-            clearInterval(timerInterval);
-            display.textContent = "SIGNAL PRÊT !";
-            btn.disabled = false;
-        } else {
-            let m = Math.floor(diff/60);
-            let s = diff % 60;
-            display.textContent = (m<10?"0"+m:m) + ":" + (s<10?"0"+s:s);
-            btn.disabled = true;
-        }
-    }
-
-    update();
-    timerInterval = setInterval(update, 1000);
+let signal=generateSignal();
+localStorage.setItem(currentGame,JSON.stringify(signal));
+displaySignal(signal);
 }
 
-// Bouton retour au menu
-function goBack() {
-    document.getElementById('menu').style.display = 'block';
-    document.getElementById('signal-screen').style.display = 'none';
-    clearInterval(timerInterval);
+function loadSavedSignal(){
+let saved=JSON.parse(localStorage.getItem(currentGame));
+if(saved && Date.now()<saved.expiry){
+displaySignal(saved);
+}else{
+resetDisplay();
+}
+}
+
+function displaySignal(s){
+type.innerText="SIGNAL "+s.type;
+min.innerText=s.min+"X";
+max.innerText=s.max+"X";
+time.innerText="Entrer à : "+s.play;
+precision.innerText="Précision : "+s.precision+"%";
+startCooldown(s.expiry);
+}
+
+function startCooldown(expiry){
+clearInterval(timer);
+btn.disabled=true;
+
+timer=setInterval(()=>{
+let diff=Math.floor((expiry-Date.now())/1000);
+if(diff<=0){
+countdown.innerText="Signal prêt";
+btn.disabled=false;
+clearInterval(timer);
+return;
+}
+let m=Math.floor(diff/60);
+let s=diff%60;
+countdown.innerText=m+":"+s.toString().padStart(2,'0');
+},1000);
+}
+
+function resetDisplay(){
+type.innerText="SIGNAL";
+min.innerText="0X";
+max.innerText="0X";
+time.innerText="Heure : --:--";
+precision.innerText="Précision : --%";
+countdown.innerText="--:--";
+btn.disabled=false;
 }
 </script>
-
 </body>
-    </html>
+</html>
