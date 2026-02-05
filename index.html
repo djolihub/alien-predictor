@@ -54,10 +54,14 @@ body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; mar
 .btn-next { width:90%; color:black; border:none; padding:18px; border-radius:25px; font-weight:900; margin-top:20px; cursor:pointer; text-transform:uppercase; font-size:16px; transition:0.3s; }
 .btn-next:disabled { background:#222; color:#555; cursor:not-allowed; }
 
-.bar-bg { width:80%; height:6px; background:#222; border-radius:10px; margin:15px auto; }
-.bar-fill { height:100%; width:0%; border-radius:10px; transition:1.5s; }
+.btn-next.active { animation: pulse 1s infinite; }
 
 @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
+  50% { transform: scale(1.05); box-shadow:0 0 25px rgba(255,255,255,0.5);}
+  100% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.2);}
+}
 </style>
 </head>
 <body>
@@ -123,7 +127,6 @@ body { background:var(--bg); color:white; font-family:'Segoe UI',sans-serif; mar
 const tg = window.Telegram.WebApp; tg.expand();
 let timerInterval; let currentGame="";
 
-// Thèmes couleurs par jeu
 const themes = {
     "AVIATOR": {accent:"#ff0000", bg:"#000000", gold:"#ffcc00"},
     "LUCKY JET": {accent:"#9b59b6", bg:"#3b0d6f", gold:"#ffcc00"},
@@ -142,18 +145,13 @@ function openSignal(name){
     box.style.borderColor=theme.accent;
     document.getElementById('nextBtn').style.background=theme.accent;
 
-    const saved=localStorage.getItem('signal_'+currentGame);
-    if(saved){
-        const data=JSON.parse(saved);
-        const now=new Date().getTime();
-        if(now<data.expiry){ displaySavedSignal(data); return;}
-    }
-    generateNew();
+    document.getElementById('nextBtn').classList.remove('active'); // bouton non actif au départ
 }
 
 function generateNew(){
     const btn=document.getElementById('nextBtn');
     btn.disabled=true;
+    btn.classList.remove('active');
 
     const now=new Date().getTime();
     const saved=JSON.parse(localStorage.getItem('signal_'+currentGame));
@@ -195,10 +193,15 @@ function startTimer(duration){
     const display=document.getElementById('countdown');
     const btn=document.getElementById('nextBtn');
     btn.disabled=true;
+    btn.classList.remove('active');
     let time=duration;
     function update(){
-        if(time<=0){ clearInterval(timerInterval); display.textContent="SIGNAL PRÊT !"; btn.disabled=false;}
-        else{ let m=Math.floor(time/60); let s=time%60; display.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s); time--; }
+        if(time<=0){ 
+            clearInterval(timerInterval); 
+            display.textContent="SIGNAL PRÊT !"; 
+            btn.disabled=false; 
+            btn.classList.add('active'); // pulse quand actif
+        } else{ let m=Math.floor(time/60); let s=time%60; display.textContent=(m<10?"0"+m:m)+":"+(s<10?"0"+s:s); time--; }
     }
     update();
     timerInterval=setInterval(update,1000);
@@ -232,7 +235,7 @@ function displaySavedSignal(data){
 
 function formatTime(date){ return date.getHours().toString().padStart(2,'0')+":"+date.getMinutes().toString().padStart(2,'0'); }
 
-function goBack(){ document.getElementById('menu').style.display='block'; document.getElementById('signal-screen').style.display='none'; clearInterval(timerInterval); }
+function goBack(){ document.getElementById('menu').style.display='block'; document.getElementById('signal-screen').style.display='none'; clearInterval(timerInterval); document.getElementById('nextBtn').classList.remove('active'); }
 </script>
 </body>
 </html>
