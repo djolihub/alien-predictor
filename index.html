@@ -64,7 +64,6 @@ body {
     box-shadow:0 0 25px rgba(255,204,0,0.6);
 }
 
-/* Heure de jeu en haut */
 .play-zone{
     background:rgba(255,255,255,0.05);
     border:1px solid rgba(255,255,255,0.1);
@@ -262,12 +261,15 @@ function generateNew(){
 
     let min,max;
     if(isGold){
-        min=(Math.random()*2+2).toFixed(1);
-        max=(Math.random()*10+5).toFixed(1);
+        // 🔥 GOLD FIX APPLIQUÉ
+        min=(Math.random()*2+3).toFixed(1);   // 3 à 5
+        max=(Math.random()*10+8).toFixed(1);  // 8 à 18
+        if(parseFloat(max) <= parseFloat(min)){
+            max=(parseFloat(min)+(Math.random()*5+3)).toFixed(1);
+        }
     } else {
-        // SAFE signal rules
-        min=(Math.floor(Math.random()*3)+2).toFixed(1); // 2 à 4
-        max=(Math.floor(Math.random()*5)+4).toFixed(1); // 4 à 8
+        min=(Math.floor(Math.random()*3)+2).toFixed(1);
+        max=(Math.floor(Math.random()*5)+4).toFixed(1);
     }
 
     const perc=Math.floor(Math.random()*19+80);
@@ -275,11 +277,11 @@ function generateNew(){
 
     let start,end;
     if(isGold){
-        start=new Date(now+120000); // Gold signal start
-        end=new Date(now+180000);   // Gold interval
+        start=new Date(now+120000);
+        end=new Date(now+180000);
     } else {
-        start=new Date(now+120000); // SAFE signal start
-        end=start; // SAFE = pas d'intervalle
+        start=new Date(now+120000);
+        end=start;
     }
 
     const data={min,max,perc,id,start:start.getTime(),end:end.getTime(),expiry:now+120000,isGold};
@@ -307,7 +309,7 @@ function displaySavedSignal(data){
         document.getElementById('val-min').style.color=theme.accent;
         document.getElementById('val-max').style.color=theme.accent;
         document.getElementById('play-time').innerText=
-            formatTime(new Date(data.start)); // SAFE = juste l'heure
+            formatTime(new Date(data.start));
     }
 
     startTimer(currentGame, Math.max(0,Math.floor((data.expiry-Date.now())/1000)));
